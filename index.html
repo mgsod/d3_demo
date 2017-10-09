@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="jq.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <style type="text/css">
+        #div1 {
+            width: 700px;
+            height: 520px;
+            padding: 10px;
+            border: 1px solid #aaaaaa;
+        }
+
+        #drag1 {
+            cursor: pointer;
+        }
+
+        ul, #div1 {
+            float: left;
+        }
+
+        ul li {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+    </style>
+</head>
+<body>
+<p>请把 Windows Azure 的图片拖放到矩形中：</p>
+<svg id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></svg>
+<ul>
+    <li>
+        <div>
+            <img id="node1" width="50" text="节点1" src="./logo.png" draggable="true" ondragstart="drag(event)"/>
+        </div>
+        <div>节点1</div>
+    </li>
+    <li>
+        <div>
+            <img id="node2" width="50" text="节点2" src="./logo.png" draggable="true" ondragstart="drag(event)"/>
+        </div>
+        <div>节点2</div>
+    </li>
+    <li>
+        <div>
+            <img id="node3" width="50" text="节点3" src="./logo.png" draggable="true" ondragstart="drag(event)"/>
+        </div>
+        <div>节点3</div>
+    </li>
+    <li>
+        <div>
+            <img id="node4" width="50" text="节点4" src="./logo.png" draggable="true" ondragstart="drag(event)"/>
+        </div>
+        <div>节点4</div>
+    </li>
+</ul>
+
+</body>
+<script>
+
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+
+        ev.dataTransfer.setData("id", ev.target.id);
+        ev.dataTransfer.setData("text", $(ev.target).attr('text'));
+    }
+
+    function drop(ev) {
+
+        var drag1 = d3.behavior.drag()
+            .on("drag", dragmove);
+
+        function dragmove(d) {
+            console.log(d)
+            d3.select(this)
+            /*.attr("tx",  d3.event.x )
+            .attr("ty", d3.event.y );*/
+                .attr('transform', 'translate(' + d3.event.x + ',' + d3.event.y + ')')
+        }
+
+        ev.preventDefault();
+        var id = ev.dataTransfer.getData("id");
+        var text = ev.dataTransfer.getData("text");
+        if (id.indexOf('node') > -1) {
+            var svg = d3.select('svg');
+            var g = svg.append('g')
+            /* .attr('x', ev.offsetX)
+             .attr('y', ev.offsetY);*/
+                .attr('transform', 'translate(' + ev.offsetX + ',' + ev.offsetY + ')');
+            g.append('circle')
+                .attr('cx', 20)
+                .attr('cy', 20)
+                .attr('r', 20);
+            g.append('text')
+                .text(text)
+                .attr('y', -5);
+            g.on('click', function (d) {
+                console.log(d)
+            });
+
+
+            svg.selectAll('g')
+                .call(drag1)
+
+
+        }
+
+
+    }
+
+
+</script>
+</html>
