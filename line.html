@@ -1,0 +1,88 @@
+<!docid html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>d3.js</title>
+    <style type="text/css">
+        #draw{margin:0 auto;width:400px;height:1200px;}
+        svg{border:1px solid red;}
+    </style>
+    <script id="text/javascript" src="d3.js"></script>
+</head>
+<body>
+<div id="draw"></div>
+</body>
+</html>
+<script id="text/javascript">
+    var dataset=[
+        {source: "html1", target: "html2", id: "1"},
+        {source: "html2", target: "html3", id: "2"},
+        {source: "html3", target: "html5", id: "3"},
+        {source: "html5", target: "css2", id: "4"},
+        {source: "css2", target: "css3", id: "5"},
+        {source: "css3", target: "javascript", id: "6"},
+        {source: "javascript", target: "c#", id: "7"},
+        {source: "c#", target: "php", id: "8"},
+        {source: "php", target: "c++", id: "9"},
+        {source: "c++", target: "c", id: "10"},
+        {source: "c", target: "HTC", id: "11"}
+    ];
+    var w = 400;
+    var h = 1200;
+    var rang_y = 50;//纵坐标浮动量(0~50)
+    var rang_x = 200;//横坐标浮动量(0~200)
+    var tolerance = 100;//纵坐标递增公差
+    var r = 20;//半径
+    var count = dataset.length;
+    var offset = [];
+    for(var i = 0; i<count; i++){
+        offset.push({x:Math.round(Math.random()*rang_x),y:Math.round(Math.random()*rang_y)});
+    }
+    var svg = d3.select("#draw")
+        .append("svg")
+        .attr("width", w)
+        .attr("height", h);
+    svg.append('svg:defs').append('svg:marker')
+        .attr('id', 'end-arrow')
+        .attr('viewBox', '0 -5 10 10')
+        .attr('refX', 10)
+        .attr('markerWidth', 6)//箭头参数适当按需调整
+        .attr('markerHeight', 10)
+        .attr('orient', 'auto')
+        .append('svg:path')
+        .attr('d', 'M0,-5L10,0L0,5')//绘制箭头形状
+        .attr('fill', 'blue');
+    var elemEnter = svg.selectAll("g")
+        .data(dataset)
+        .enter()
+        .append("g")
+        .attr("transform", function(d,i){
+            return "translate("+(w/2-rang_x/2+offset[i].x)+","+(tolerance*i+25+offset[i].y)+")";
+        })
+        .on("click",function(){
+            alert(this.childNodes[1].firstChild.nodeValue);
+        });
+    elemEnter.append("circle")
+        .attr("r", r)
+        .attr("stroke","#339933")
+        .attr("fill", "#339933")
+        .attr("id", function(d){
+            return d.id;
+        });
+    elemEnter.append("text")
+        .attr("text-anchor", "middle")
+        .attr("dy","0.34em")
+        .text(function(d){return d.source});
+    elemEnter.append("path")
+        .attr("d", function(d, i){
+            if(i<count-1){
+                return 'M0 20 L'+(offset[i+1].x-offset[i].x)+' '+(offset[i+1].y-offset[i].y+tolerance-r);
+            }
+        })
+        .attr("marker-end", "url(#end-arrow)")
+        .style({
+            fill:'none',
+            stroke:'blue',
+            'stroke-width':2
+        });
+</script>

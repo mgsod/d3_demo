@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="jq.js"></script>
-    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="d3.js" charset="utf-8"></script>
+    <script src="http://basefs2dev.dookoo.net/static/js/vendor.91978d0ff4743994ae16.js"></script>
     <style type="text/css">
         #div1 {
             width: 700px;
@@ -34,25 +35,25 @@
 <ul>
     <li>
         <div>
-            <img id="node1" width="50" text="节点1" src="./logo.png" draggable="true" ondragstart="drag(event)"/>
+            <img id="1" width="50" text="节点1" src="./logo.png" draggable="true" ondragstart="drag(event)"/>
         </div>
         <div>节点1</div>
     </li>
     <li>
         <div>
-            <img id="node2" width="50" text="节点2" src="./logo.png" draggable="true" ondragstart="drag(event)"/>
+            <img id="2" width="50" text="节点2" src="./logo.png" draggable="true" ondragstart="drag(event)"/>
         </div>
         <div>节点2</div>
     </li>
     <li>
         <div>
-            <img id="node3" width="50" text="节点3" src="./logo.png" draggable="true" ondragstart="drag(event)"/>
+            <img id="3" width="50" text="节点3" src="./logo.png" draggable="true" ondragstart="drag(event)"/>
         </div>
         <div>节点3</div>
     </li>
     <li>
         <div>
-            <img id="node4" width="50" text="节点4" src="./logo.png" draggable="true" ondragstart="drag(event)"/>
+            <img id="4" width="50" text="节点4" src="./logo.png" draggable="true" ondragstart="drag(event)"/>
         </div>
         <div>节点4</div>
     </li>
@@ -60,58 +61,183 @@
 
 </body>
 <script>
+    var nodeStyle = {
+        0:{
+            fill:'#ccbc41',
+            stroke:'#00cc60',
+            id:0
+        },
+        1:{
+            fill:'#bf2dcc',
+            stroke:'#381ccc',
+            id:1
 
+        },
+        2:{
+            fill:'#cc8713',
+            stroke:'#4bccbc',
+            id:2
+        },
+        3:{
+            fill:'#ccc1b0',
+            stroke:'#cc445d',
+            id:3
+        },
+        4:{
+            fill:'#7e74cc',
+            stroke:'#7ecc6d',
+            id:4
+        }
+    };
+
+    //节点集合
+    var nodeList = [];
+    var isClick = true;
+    var rang_y = 0;//纵坐标浮动量(0~50)
+    var svg = d3.select('svg');
+
+    svg.append('svg:defs').append('svg:marker')
+        .attr('id', 'end-arrow')
+        .attr('viewBox', '0 -5 10 10')
+        .attr('refX', 10)
+        .attr('markerWidth', 6)//箭头参数适当按需调整
+        .attr('markerHeight', 10)
+        .attr('orient', 'auto')
+        .append('svg:path')
+        .attr('d', 'M0,-5L10,0L0,5')//绘制箭头形状
+        .attr('fill', 'blue');
+    //拖拽结束
     function allowDrop(ev) {
         ev.preventDefault();
     }
 
+    //拖拽开始. 记录id等信息
     function drag(ev) {
-
         ev.dataTransfer.setData("id", ev.target.id);
         ev.dataTransfer.setData("text", $(ev.target).attr('text'));
     }
 
-    function drop(ev) {
-
-        var drag1 = d3.behavior.drag()
-            .on("drag", dragmove);
-
-        function dragmove(d) {
-            console.log(d)
-            d3.select(this)
-            /*.attr("tx",  d3.event.x )
-            .attr("ty", d3.event.y );*/
-                .attr('transform', 'translate(' + d3.event.x + ',' + d3.event.y + ')')
+    function computedPositon(x_y,value){
+        var temp = value;
+        switch (x_y){
+            case 'x':
+                if(value <= 15){
+                    temp = 15;
+                }
+                if(value >= 700-15){
+                    temp =700- 15;
+                }
+                return temp;
+                break;
+            case 'y':
+                if(value <= 40){
+                    temp = 40;
+                }
+                if(value>= 500){
+                    temp = 500;
+                }
+                return temp;
+                break;
         }
 
+    }
+
+    //d3拖拽函数
+    function dragmove(d) {
+        d.nodeInfo.x = computedPositon('x',d3.event.x)
+        d.nodeInfo.y = computedPositon('y',d3.event.y)
+        d3.select(this)
+            .attr('transform', 'translate(' +  d.nodeInfo.x + ',' + d.nodeInfo.y + ')')
+
+    }
+
+    //拖到到svg中
+    function drop(ev) {
         ev.preventDefault();
         var id = ev.dataTransfer.getData("id");
-        var text = ev.dataTransfer.getData("text");
-        if (id.indexOf('node') > -1) {
-            var svg = d3.select('svg');
-            var g = svg.append('g')
-            /* .attr('x', ev.offsetX)
-             .attr('y', ev.offsetY);*/
-                .attr('transform', 'translate(' + ev.offsetX + ',' + ev.offsetY + ')');
-            g.append('circle')
-                .attr('cx', 20)
-                .attr('cy', 20)
-                .attr('r', 20);
-            g.append('text')
-                .text(text)
-                .attr('y', -5);
-            g.on('click', function (d) {
-                console.log(d)
-            });
+           if(id){
+               createNode(ev,nodeStyle[id]);
+           }
 
+    }
 
-            svg.selectAll('g')
-                .call(drag1)
-
-
+    var flag = false;
+    var temp;
+    var temp_g ;
+    function nodeClickHandle(g,d){
+        if(!isClick) return false;
+        if(!flag){
+            temp = d;
+            temp_g = g;
+            flag = true;
+        }else{
+            svg.append('path')
+                .attr('d',function(){
+                    return 'M'+(temp.nodeInfo.x+rang_y)+' '+(temp.nodeInfo.y+rang_y)+' L'+(d.nodeInfo.x+rang_y)+' '+(d.nodeInfo.y+rang_y)
+                })
+                .attr("marker-end", "url(#end-arrow)")
+                .style({
+                    fill:'none',
+                    stroke:'blue',
+                    'stroke-width':2
+                });
+            temp_g.attr('a',temp.id);
+            g.attr('form',temp_g.id)
+            temp = null;
+            flag = false;
         }
 
 
+    }
+    //创建节点
+    function createNode(ev,style) {
+        var x = computedPositon('x',ev.offsetX);
+        var y = computedPositon('y',ev.offsetY);
+        var drag1 = d3.behavior.drag()
+            .origin(function(){
+                var t = d3.select(this);
+              var transform = (t.attr('transform'));
+              var reg = /\w*\((\d+),(\d+)\)/;
+              var x_y = transform.match(reg);
+                return {
+                    x: x_y[1],
+                    y: x_y[2]
+                }
+            })
+            .on("drag", dragmove);
+        var text = ev.dataTransfer.getData("text");
+        nodeList.push({
+            nodeInfo:{
+                x:x,
+                y:y
+            }
+        });
+        var g = svg.selectAll('g')
+            .data(nodeList)
+            .enter()
+            .append('g')
+            .attr('cx',20)
+            .attr('cy',20)
+            .attr('transform', 'translate(' + x + ',' + y + ')');
+        //画圆
+        g.append('circle')
+            .attr('r', 20)
+            .attr("stroke",style.stroke)
+            .attr("fill", style.fill)
+
+        //填充字
+        g.append('text')
+            .text(text)
+            .attr('y', -25)
+            .attr('x', -20)
+        //绑定单击事件
+        g.on('click', function(d){
+            nodeClickHandle(g,d)
+        });
+
+        //绑定拖拽事件
+        svg.selectAll('g')
+            .call(drag1)
     }
 
 
