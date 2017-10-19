@@ -6,19 +6,33 @@
     <script src="jq.js"></script>
     <script src="d3.js" charset="utf-8"></script>
     <style type="text/css">
-        #div1 {
+        body{
+            padding:20px;
+        }
+        #div1,.bgContainer{
             width: 1000px;
             height: 600px;
-            padding: 10px;
-            border: 1px solid #aaaaaa;
+
+        }
+        @keyframes marchingants {
+            to { stroke-dashoffset: 20; }
+        }
+        rect.strokedrect {
+            stroke-dasharray: 10;
+            animation: marchingants 1s forwards infinite linear;
         }
 
+        .bgContainer{
+            border: 1px solid #aaaaaa;
+            background: url(bg.jpg);
+        }
         #drag1 {
             cursor: pointer;
         }
 
-        ul, #div1 {
+        ul, .bgContainer {
             float: left;
+            margin-right: 30px;
         }
 
         ul li {
@@ -26,68 +40,55 @@
             margin-bottom: 20px;
         }
 
+        path{
+            cursor: hand;
+        }
     </style>
 </head>
 <body>
-<p>请把 Windows Azure 的图片拖放到矩形中：</p>
 <ul>
     <li>
         <div>
-            <img id="1" width="50" text="节点1" src="./logo.png" draggable="true" ondragstart="drag(event)"/>
+            <img id="1" width="50"  src="./svg/1.svg" draggable="true" ondragstart="drag(event)"/>
         </div>
         <div>节点1</div>
     </li>
     <li>
         <div>
-            <img id="2" width="50" text="节点2" src="./logo.png" draggable="true" ondragstart="drag(event)"/>
+            <img id="2" width="50"  src="./svg/2.svg" draggable="true" ondragstart="drag(event)"/>
         </div>
         <div>节点2</div>
     </li>
     <li>
         <div>
-            <img id="3" width="50" text="节点3" src="./logo.png" draggable="true" ondragstart="drag(event)"/>
+            <img id="3" width="50"  src="./svg/3.svg" draggable="true" ondragstart="drag(event)"/>
         </div>
         <div>节点3</div>
     </li>
     <li>
         <div>
-            <img id="4" width="50" text="节点4" src="./logo.png" draggable="true" ondragstart="drag(event)"/>
+            <img id="4" width="50"  src="./svg/4.svg" draggable="true" ondragstart="drag(event)"/>
         </div>
         <div>节点4</div>
     </li>
 </ul>
-<svg id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></svg>
+<div class="bgContainer">
+    <svg id="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
 
+    </svg>
+</div>
+<div class="setting">
+
+</div>
 
 </body>
 <script>
-    var nodeStyle = {
-        0: {
-            fill: '#ccbc41',
-            stroke: '#00cc60',
-            id: 0
-        },
-        1: {
-            fill: '#bf2dcc',
-            stroke: '#381ccc',
-            id: 1
-
-        },
-        2: {
-            fill: '#cc8713',
-            stroke: '#4bccbc',
-            id: 2
-        },
-        3: {
-            fill: '#ccc1b0',
-            stroke: '#cc445d',
-            id: 3
-        },
-        4: {
-            fill: '#7e74cc',
-            stroke: '#7ecc6d',
-            id: 4
-        }
+    var svgObj = {
+        1:'./svg/1.svg',
+        2:'./svg/2.svg',
+        3:'./svg/3.svg',
+        4:'./svg/4.svg',
+        5:'./svg/5.svg'
     };
 
     //节点集合
@@ -97,7 +98,7 @@
     var width = 1000;
     var height = 600;
     var allowPath = true;
-    var rang_y = 0;//纵坐标浮动量(0~50)
+    var rang_y = 25;//节点圆心偏移量
     var svg = d3.select('svg');
     svg.append('svg:defs').append('svg:marker')
         .attr('id', 'end-arrow')
@@ -108,7 +109,7 @@
         .attr('orient', 'auto')
         .append('svg:path')
         .attr('d', 'M0,-5L10,0L0,5')//绘制箭头形状
-        .attr('fill', 'blue');
+        .attr('fill', 'black');
 
     //拖拽结束
     function allowDrop(ev) {
@@ -118,27 +119,27 @@
     //拖拽开始. 记录id等信息
     function drag(ev) {
         ev.dataTransfer.setData("id", ev.target.id);
-        ev.dataTransfer.setData("text", $(ev.target).attr('text'));
     }
 
+    //计算画布边缘位置
     function computedPositon(x_y, value) {
         var temp = value;
         switch (x_y) {
             case 'x':
-                if (value <= 15) {
-                    temp = 15;
+                if (value <= 0) {
+                    temp = 0;
                 }
-                if (value >= width - 15) {
-                    temp = width - 15;
+                if (value >= width-50) {
+                    temp = width-50;
                 }
                 return temp;
                 break;
             case 'y':
-                if (value <= 40) {
-                    temp = 40;
+                if (value <= 0) {
+                    temp = 0;
                 }
-                if (value >= height) {
-                    temp = height;
+                if (value >= height-50) {
+                    temp = height-50;
                 }
                 return temp;
                 break;
@@ -159,7 +160,7 @@
             if (toPath.size() > 0) {
                 toPath.filter(function(){
                     var toD = d3.select(this).attr('d');
-                    toD = toD.replace(/L(\d+) (\d)+/, 'L' + (d.nodeInfo.x) + ' ' + (d.nodeInfo.y))
+                    toD = toD.replace(/L(\d+) (\d)+/, 'L' + (d.nodeInfo.x+25) + ' ' + (d.nodeInfo.y+25))
                     d3.select(this).attr('d', toD);
                 });
 
@@ -169,16 +170,14 @@
             if (fromPath.size() > 0) {
                 fromPath.filter(function () {
                     var fromD = d3.select(this).attr('d');
-                    fromD = fromD.replace(/M(\d+) (\d)+/, 'M' + (d.nodeInfo.x) + ' ' + (d.nodeInfo.y))
+                    fromD = fromD.replace(/M(\d+) (\d)+/, 'M' + (d.nodeInfo.x+25) + ' ' + (d.nodeInfo.y+25))
                     d3.select(this).attr('d', fromD)
                 })
-
-
             }
         }
 
 
-        if (mindistances > -1 && isCollsionWithRect(d.nodeInfo.x, d.nodeInfo.y, 43, 62, collsionArr[mindistances].nodeInfo.x, collsionArr[mindistances].nodeInfo.y)) {
+        if (mindistances > -1 && isCollsionWithRect(d.nodeInfo.x, d.nodeInfo.y, 50, 50, collsionArr[mindistances].nodeInfo.x, collsionArr[mindistances].nodeInfo.y)) {
             allowPath = false;
             return false;
         } else {
@@ -189,6 +188,7 @@
 
     }
 
+    //获取数组最小距离
     function getMindistances(x, y, arr) {
         var distances = [];
         for (var i = 0; i < arr.length; i++) {
@@ -197,12 +197,14 @@
         return distances.indexOf(Math.min.apply(Math, distances))
     }
 
+    //计算两点之间的距离
     function distanceCAL(x1, y1, x2, y2) {
         var calX = x2 - x1;
         var calY = y2 - y1;
         return Math.pow((calX * calX + calY * calY), 0.5);
     }
 
+    //拷贝出当前节点的节点数组
     function copyArr(arr, j) {
         var temp = [];
         for (var i = 0; i < arr.length; i++) {
@@ -218,7 +220,7 @@
         ev.preventDefault();
         var id = ev.dataTransfer.getData("id");
         if (id) {
-            createNode(ev, nodeStyle[id]);
+            createNode(ev,id);
         }
 
     }
@@ -227,7 +229,31 @@
     var temp;
     var temp_g;
 
+    //单击节点
     function nodeClickHandle(g, d) {
+        svg.selectAll('g')
+            .filter(function(data,i){
+                console.log(d.nodeInfo.index)
+                if(i === d.nodeInfo.index){
+                    d3.select(this)
+                        .style({
+                            fill: 'none',
+                            stroke: 'black',
+                            'stroke-width': 1
+                        })
+
+                        .attr('stroke-dasharray',8)
+                        .select('rect')
+                        .attr('class','strokedrect')
+                }else{
+                    d3.select(this)
+                        .style({
+                            fill: 'none',
+                            stroke: 'none',
+                            'stroke-width': 0
+                        })
+                }
+            });
         if (!flag) {
             temp = d;
             temp_g = g;
@@ -250,9 +276,17 @@
                 .attr('to', g.attr('id'))
                 .style({
                     fill: 'none',
-                    stroke: 'blue',
-                    'stroke-width': 2
-                });
+                    stroke: 'black',
+                    'stroke-width': 1.5
+                }).on('click',function(){
+                    console.log(111)
+            })
+                .on('mouseover',function(){
+                    d3.select(this).style({ stroke: '#fca326','stroke-width':2.8})
+                })
+                .on('mouseout',function(){
+                    d3.select(this).style({ stroke: 'black','stroke-width':1.5})
+                })
             temp.nodeInfo.to = temp_g.attr('id');
             d.nodeInfo.from = g.attr('id');
             temp_g.select('circle')
@@ -267,11 +301,13 @@
     }
 
     //创建节点
-    function createNode(ev, style) {
-        var x = computedPositon('x', ev.offsetX);
-        var y = computedPositon('y', ev.offsetY);
+    function createNode(ev,id) {
+        console.log(id)
+        var x = computedPositon('x', ev.offsetX-25);
+        var y = computedPositon('y', ev.offsetY-25);
         var drag1 = d3.behavior.drag()
             .origin(function () {
+                //以鼠标点击的位置作为拖动的圆心.防止开始拖动时抖动
                 var t = d3.select(this);
                 var transform = (t.attr('transform'));
                 var reg = /\w*\((\d+),(\d+)\)/;
@@ -281,35 +317,47 @@
                     y: x_y[2]
                 }
             })
-            .on("drag", dragmove);
-        var text = ev.dataTransfer.getData("text");
+            .on("drag", dragmove); //绑定拖拽函数
+
         nodeList.push({
             nodeInfo: {
                 x: x,
                 y: y
             }
         });
+
+
         var g = svg.selectAll('g')
             .data(nodeList)
             .enter()
             .append('g')
-            .attr('cx', 20)
-            .attr('cy', 20)
             .attr('transform', 'translate(' + x + ',' + y + ')')
             .attr('id', function (d, i) {
+                d.nodeInfo.index = i;
                 return 'node_' + i;
-            });
+            })
         //画圆
-        g.append('circle')
+       /* g.append('circle')
             .attr('r', 20)
             .attr("stroke", style.stroke)
-            .attr("fill", style.fill)
+            .attr("fill", style.fill)*/
 
         //填充字
-        g.append('text')
+       /* g.append('text')
             .text(text)
             .attr('y', -25)
-            .attr('x', -20)
+            .attr('x', -20)*/
+        g.append('rect')
+            .attr('width',50)
+            .attr('height',50)
+            .style({
+                fill: 'none',
+
+            });
+        g.append('image')
+            .attr('width',50)
+            .attr('height',50)
+            .attr('xlink:href',svgObj[id])
         //绑定单击事件
         g.on('click', function (d) {
             if (d3.event.defaultPrevented) return
@@ -322,6 +370,7 @@
     }
 
 
+    //节点碰撞检测
     function isCollsionWithRect(x1, y1, w, h, x2, y2) {
         if (x1 >= x2 && x1 >= x2 + w) {
             return false;
@@ -335,6 +384,14 @@
         return true;
     }
 
+    $('#div1').mousedown(function(e){
+        if(3 == e.which){
 
+
+        }else if(1 == e.which){
+
+
+        }
+    })
 </script>
 </html>
