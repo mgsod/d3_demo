@@ -161,7 +161,7 @@ function dragMove(_nodeData, _nodeIndex) {
     //判断节点拖动时. 是否需要线条跟随
     if (allowPath) {
         var name = _nodeData.nodeInfo.name;
-        console.log(name)
+
         var toPath = svg.selectAll('[to=' + name + ']');
         var fromPath = svg.selectAll('[from=' + name + ']');
         if (toPath.size() > 0) {
@@ -265,7 +265,6 @@ function drop(ev) {
 }
 
 
-
 /**
  * 创建节点
  */
@@ -311,8 +310,39 @@ function createNode() {
     //绑定单击事件
     g.on('click', function (d) {
         if (d3.event.defaultPrevented) return; //防止拖动触发单击事件
-        nodeClickHandle(g, d)
+       // nodeClickHandle(g, d);
+        nodeSelect(g,d)
+        console.log(1)
+
+
     });
+    g.append('polygon')
+        .attr('points', '53,15 53,35 65,25')
+        .attr('fill', 'none')
+        .attr('stroke', '#ffad33')
+        .attr('stroke-width', 1.5)
+        .classed('polygon show', true)
+        .on('click', function (d,i,e) {
+            d3.select(this)
+                .attr('fill', '#ffad33');
+            d3.event.stopPropagation();
+
+            nodeClickHandle(g, d);
+
+
+        }).on('mouseover', function () {
+        d3.select(this)
+            .classed('show', true)
+            .attr('fill', '#ffad33')
+    }).on('mouseout', function () {
+
+            d3.select(this)
+                .classed('show', false)
+                .attr('fill', 'none')
+
+
+    });
+
 
     //绑定拖拽事件
     svg.selectAll('g')
@@ -328,27 +358,7 @@ function createNode() {
  * @returns {boolean}
  */
 function nodeClickHandle(_node, _nodeData) {
-    svg.selectAll('g')
-        .filter(function (data) {
-            if (data.nodeInfo.name === _nodeData.nodeInfo.name) {
-                d3.select(this)
-                    .style({
-                        fill: 'none',
-                        stroke: 'black',
-                        'stroke-width': 1
-                    })
-                    .attr('stroke-dasharray', 8)
-                    .select('rect')
-                    .attr('class', 'strokedrect')
-            } else {
-                d3.select(this)
-                    .style({
-                        fill: 'none',
-                        stroke: 'none',
-                        'stroke-width': 0
-                    })
-            }
-        });
+
     if (!isSelectStart) {
         selectedNodeData = _nodeData;
         selectedNode = _node;
@@ -384,6 +394,32 @@ function nodeClickHandle(_node, _nodeData) {
         selectedNodeData = null;
         isSelectStart = false
     }
+}
+
+function nodeSelect(_node, _nodeData){
+    svg.selectAll('g')
+        .filter(function (data) {
+            if (data.nodeInfo.name === _nodeData.nodeInfo.name) {
+                var _this = d3.select(this);
+                _this.style({
+                    fill: 'none',
+                    stroke: 'black',
+                    'stroke-width': 1
+                }).select('rect')
+                    .attr('stroke-dasharray', 8)
+                    .attr('class', 'strokedrect');
+
+            } else {
+                d3.select(this)
+                    .style({
+                        fill: 'none',
+                        stroke: 'none',
+                        'stroke-width': 0
+                    })
+                    .select('polygon')
+                    .classed('show', false)
+            }
+        });
 }
 
 
