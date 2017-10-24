@@ -6,6 +6,7 @@
     <script src="js/jq.js"></script>
     <script src="js/d3.js" charset="utf-8"></script>
     <script src="js/context.js"></script>
+    <script src="js/vue.js"></script>
     <link rel="stylesheet" href="css/context.standalone.css">
     <style type="text/css">
         body {
@@ -74,49 +75,51 @@
     </style>
 </head>
 <body>
-<div class="panel">
-    <ul>
-        <li>
-            <div>
-                <img id="1" width="50" src="./svg/1.svg" draggable="true" ondragstart="drag(event)"/>
-            </div>
-            <div>节点1</div>
-        </li>
-        <li>
-            <div>
-                <img id="2" width="50" src="./svg/2.svg" draggable="true" ondragstart="drag(event)"/>
-            </div>
-            <div>节点2</div>
-        </li>
-        <li>
-            <div>
-                <img id="3" width="50" src="./svg/3.svg" draggable="true" ondragstart="drag(event)"/>
-            </div>
-            <div>节点3</div>
-        </li>
-        <li>
-            <div>
-                <img id="4" width="50" src="./svg/4.svg" draggable="true" ondragstart="drag(event)"/>
-            </div>
-            <div>节点4</div>
-        </li>
-    </ul>
-</div>
-<div class="panel">
-    <div class="bgContainer">
-        <svg id="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
-
-        </svg>
+<div id="app">
+    <div class="panel">
+        <ul>
+            <li>
+                <div>
+                    <img id="1" width="50" src="./svg/1.svg" draggable="true" ondragstart="drag(event)"/>
+                </div>
+                <div>节点1</div>
+            </li>
+            <li>
+                <div>
+                    <img id="2" width="50" src="./svg/2.svg" draggable="true" ondragstart="drag(event)"/>
+                </div>
+                <div>节点2</div>
+            </li>
+            <li>
+                <div>
+                    <img id="3" width="50" src="./svg/3.svg" draggable="true" ondragstart="drag(event)"/>
+                </div>
+                <div>节点3</div>
+            </li>
+            <li>
+                <div>
+                    <img id="4" width="50" src="./svg/4.svg" draggable="true" ondragstart="drag(event)"/>
+                </div>
+                <div>节点4</div>
+            </li>
+        </ul>
     </div>
-</div>
-<div class="panel">
-    <div class="setting">
+    <div class="panel">
+        <div class="bgContainer">
+            <svg id="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
+
+            </svg>
+        </div>
+    </div>
+    <div class="panel">
+        <div class="setting">
             <div class="head">
                 <span>删除</span>
             </div>
             <div class="body">
 
             </div>
+        </div>
     </div>
 </div>
 

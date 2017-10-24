@@ -103,7 +103,7 @@ var context = context || (function () {
 			e.preventDefault();
 			e.stopPropagation();
             context.toElement = e.toElement;
-            context.t = this;
+            context.target = this;
 			
 			$('.dropdown-context:not(.dropdown-context-sub)').hide();
 			
