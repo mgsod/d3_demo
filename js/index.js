@@ -39,6 +39,22 @@ var drag1 = d3.behavior.drag()
 //初始化右键菜单插件
 context.init({preventDoubleContext: false});
 
+toastr.options = {
+    "closeButton": true,
+    "debug": false,
+    "progressBar": false,
+    "positionClass": "toast-top-center",
+    "onclick": null,
+    "showDuration": "300",
+    "hideDuration": "1000",
+    "timeOut": "3000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "swing",
+    "showMethod": "fadeIn",
+    "hideMethod": "slideUp"
+};
+
 //绑定节点右键菜单
 context.attach('.node', [
     {header: 'Options'},
@@ -56,10 +72,8 @@ context.attach('.line', [
     {
         text: 'Del', href: '#', action: function (e) {
         console.log(context.target)
-        var path = d3.select(context.target)
-        path.remove();
-        /* var node = d3.select(context.t);
-         delNode(node);*/
+        var path = d3.select(context.target);
+        delPath(path)
     }
     }
 ]);
@@ -207,17 +221,18 @@ function createNode() {
  */
 function delNode(node) {
     var name = node.attr('id');
-    nodeList.splice(getNodeIndexByName(nodeList, name), 1);
     node.remove();
     d3.selectAll('[from=' + name + ']')
         .filter(function () {
-            d3.select(this).remove();
+            delPath(d3.select(this));
+
         });
     d3.selectAll('[to=' + name + ']')
         .filter(function () {
-            d3.select(this).remove();
+            delPath(d3.select(this));
         });
 
+    nodeList.splice(getNodeIndexByName(nodeList, name), 1);
     //绑定拖拽事件
     svg.selectAll('g')
         .call(drag1)
@@ -290,8 +305,19 @@ function drawLine(_node, _nodeData) {
         isSelectStart = true;
     } else {
         if (_node === selectedNode) {
-            console.log('不能选择当前节作为下级节点');
+            toastr['warning']("不能选择当前节作为下级节点");
+            restLine(_node);
             return false
+        }
+        if (_nodeData.nodeInfo.from && _nodeData.nodeInfo.from.indexOf(selectedNodeData.nodeInfo.name) > -1) {
+            toastr['warning']("此节点已经是当前节点的下级");
+            restLine(_node);
+            return false;
+        }
+        if (_nodeData.nodeInfo.to && _nodeData.nodeInfo.to.indexOf(selectedNodeData.nodeInfo.name) > -1) {
+            toastr['warning']("此节点是当前节点的上级,不可作为下级节点");
+            restLine(_node);
+            return false;
         }
         svg.append('path')
             .attr('d', function () {
@@ -312,15 +338,50 @@ function drawLine(_node, _nodeData) {
             .on('mouseout', function () {
                 d3.select(this).style({stroke: 'black', 'stroke-width': 1.5})
             });
-        setTimeout(function () {
-            selectedNode.select('polygon')
-                .attr('fill', '#fff');
-            _node.select('polygon')
-                .attr('fill', '#fff')
-        }, 1100);
-        selectedNodeData = null;
-        isSelectStart = false
+
+        selectedNodeData.nodeInfo.to = selectedNodeData.nodeInfo.to || [];
+        selectedNodeData.nodeInfo.to.push(_nodeData.nodeInfo.name);
+
+        _nodeData.nodeInfo.from = _nodeData.nodeInfo.from || [];
+        _nodeData.nodeInfo.from.push(selectedNodeData.nodeInfo.name);
+
+        console.log('selected', selectedNodeData);
+        console.log('now', _nodeData);
+
+
+        restLine(_node)
     }
+}
+
+
+function delPath(path) {
+    var path_to = path.attr('to');
+    var path_from = path.attr('from');
+
+    //移除终点节点中from的项
+    var index_to = getNodeIndexByName(nodeList, path_to);
+    var toNode = nodeList[index_to];
+    toNode.nodeInfo.from.splice(toNode.nodeInfo.from.indexOf(path_from), 1);
+
+    //移除起点节点中to的项
+    var index_from = getNodeIndexByName(nodeList, path_from);
+    var fromNode = nodeList[index_from];
+    fromNode.nodeInfo.to.splice(fromNode.nodeInfo.to.indexOf(path_to), 1);
+    //移除元素
+    path.remove();
+
+}
+
+function restLine(_node) {
+    setTimeout(function () {
+        selectedNode.select('polygon')
+            .attr('fill', '#fff');
+        _node.select('polygon')
+            .attr('fill', '#fff')
+    }, 1100);
+    selectedNodeData = null;
+    isSelectStart = false;
+
 }
 
 /**
