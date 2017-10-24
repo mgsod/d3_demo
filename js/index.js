@@ -310,36 +310,34 @@ function createNode() {
     //绑定单击事件
     g.on('click', function (d) {
         if (d3.event.defaultPrevented) return; //防止拖动触发单击事件
-       // nodeClickHandle(g, d);
-        nodeSelect(g,d)
-        console.log(1)
+        nodeSelect(g,d);
+
 
 
     });
     g.append('polygon')
         .attr('points', '53,15 53,35 65,25')
-        .attr('fill', 'none')
+        .attr('fill', '#fff')
         .attr('stroke', '#ffad33')
         .attr('stroke-width', 1.5)
         .classed('polygon show', true)
-        .on('click', function (d,i,e) {
+        .on('click', function (d) {
             d3.select(this)
                 .attr('fill', '#ffad33');
             d3.event.stopPropagation();
-
-            nodeClickHandle(g, d);
+            drawLine(g, d);
 
 
         }).on('mouseover', function () {
         d3.select(this)
             .classed('show', true)
-            .attr('fill', '#ffad33')
+            //.attr('fill', '#ffad33')
     }).on('mouseout', function () {
 
-            d3.select(this)
+         /*   d3.select(this)
                 .classed('show', false)
                 .attr('fill', 'none')
-
+*/
 
     });
 
@@ -357,13 +355,11 @@ function createNode() {
  * @param _nodeData 当前点击节点上的数据
  * @returns {boolean}
  */
-function nodeClickHandle(_node, _nodeData) {
-
+function drawLine(_node, _nodeData) {
     if (!isSelectStart) {
         selectedNodeData = _nodeData;
         selectedNode = _node;
         isSelectStart = true;
-
     } else {
         if (_node === selectedNode) {
             console.log('不能选择当前节作为下级节点');
@@ -391,6 +387,11 @@ function nodeClickHandle(_node, _nodeData) {
             });
         selectedNode.select('circle')
             .attr('stroke-width', 1);
+
+        selectedNode.select('polygon')
+            .attr('fill', '#fff');
+        _node.select('polygon')
+            .attr('fill', '#fff')
         selectedNodeData = null;
         isSelectStart = false
     }
