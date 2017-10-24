@@ -222,17 +222,18 @@ function createNode() {
 function delNode(node) {
     var name = node.attr('id');
     node.remove();
+    nodeList.splice(getNodeIndexByName(nodeList, name), 1);
     d3.selectAll('[from=' + name + ']')
         .filter(function () {
-            delPath(d3.select(this));
+            delPath(d3.select(this),'from');
 
         });
-    d3.selectAll('[to=' + name + ']')
+    d3.selectAll('[to=' + name + ']','to')
         .filter(function () {
             delPath(d3.select(this));
         });
 
-    nodeList.splice(getNodeIndexByName(nodeList, name), 1);
+
     //绑定拖拽事件
     svg.selectAll('g')
         .call(drag1)
@@ -354,21 +355,36 @@ function drawLine(_node, _nodeData) {
 }
 
 
-function delPath(path) {
+/**
+ *  移除线条
+ * @param path 线条
+ * @param tag [not required]
+ * 如果传入to 则移除起始节点里的to对应的项
+ * 如果传入from 则移除终点节点里的from对应的项
+ * 如果未传入则视为仅仅删除线条 移除起点和终点中对应的项
+ */
+function delPath(path,tag) {
     var path_to = path.attr('to');
     var path_from = path.attr('from');
 
-    //移除终点节点中from的项
-    var index_to = getNodeIndexByName(nodeList, path_to);
-    var toNode = nodeList[index_to];
-    toNode.nodeInfo.from.splice(toNode.nodeInfo.from.indexOf(path_from), 1);
+    if(!tag || tag === "from"){
+        //移除终点节点中from的项
+        var index_to = getNodeIndexByName(nodeList, path_to);
+        var toNode = nodeList[index_to];
+        toNode.nodeInfo.from.splice(toNode.nodeInfo.from.indexOf(path_from), 1);
+    }
 
-    //移除起点节点中to的项
-    var index_from = getNodeIndexByName(nodeList, path_from);
-    var fromNode = nodeList[index_from];
-    fromNode.nodeInfo.to.splice(fromNode.nodeInfo.to.indexOf(path_to), 1);
+    if(!tag || tag === "to"){
+        //移除起点节点中to的项
+        var index_from = getNodeIndexByName(nodeList, path_from);
+        var fromNode = nodeList[index_from];
+        fromNode.nodeInfo.to.splice(fromNode.nodeInfo.to.indexOf(path_to), 1);
+    }
+
     //移除元素
     path.remove();
+    console.log(toNode)
+    console.log(fromNode)
 
 }
 
