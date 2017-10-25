@@ -21,8 +21,14 @@ var pathColor = '#565656';
 var svg = d3.select('svg');
 window.onload = function () {
     svgWidth = $('.canvas').width();
-    $('.bgContainer,svg').css({'width': svgWidth})
-}
+    svgHeight = $(window).height() - 60
+    $('.bgContainer,svg').css(
+        {
+            'width': svgWidth,
+            'height': svgHeight
+        })
+
+};
 window.onresize = function () {
     svg = d3.select('svg'); //画布对象
     svgWidth = $('.canvas').width();

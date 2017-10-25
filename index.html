@@ -17,10 +17,12 @@
 </head>
 <body>
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-2">3</div>
-        <div class="col-md-8">2</div>
-        <div class="col-md-2">1</div>
+    <div class="row text-center">
+        <div class="col-md-2 b-r b-b padder-v">
+            节点列表
+        </div>
+        <div class="col-md-8 b-r b-b padder-v canvas-head">画布</div>
+        <div class="col-md-2 b-r b-b padder-v">属性设置</div>
     </div>
     <div class="row">
         <div class="col-md-2">
@@ -42,7 +44,7 @@
             </div>
         </div>
         <div class="col-md-8 canvas">
-            <div class="bgContainer">
+            <div class="bgContainer b-b b-l b-r">
                 <svg id="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
 
                 </svg>

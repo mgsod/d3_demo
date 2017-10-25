@@ -17,8 +17,10 @@ rect.strokedrect {
 }
 
 .bgContainer {
-    border: 1px solid #aaaaaa;
     background: url(../img/bg.jpg);
+}
+.canvas{
+    padding:0px;
 }
 /**
  线条动画
