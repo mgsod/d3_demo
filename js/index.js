@@ -13,28 +13,25 @@ var svgHeight = 600;//画布高
 var nodeWidth = 50; //节点宽
 var nodeHeight = 50; //节点高
 var allowPath = true; //是否允许Path跟随
-var nodeOffset = 25;//节点圆心偏移量
+var nodeOffset = 25;//节点圆心偏移量 [目前是50*50大小节点.圆心为50/2,]
 var isSelectStart = false; //连线时判断是否已经选择起始节点
 var selectedNodeData; //连线时 已选择节点的节点数据
 var selectedNode; // 已选择的节点
 var pathColor = '#565656';
+var adsorptionIntensity = 20; //节点和画布边缘的吸附强度
 var svg = d3.select('svg');
-window.onload = function () {
+window.onload = setSvgSize
+window.onresize = setSvgSize
+
+function setSvgSize(){
     svgWidth = $('.canvas').width();
-    svgHeight = $(window).height() - 60
+    svgHeight = $(window).height() - 60;
     $('.bgContainer,svg').css(
         {
             'width': svgWidth,
             'height': svgHeight
         })
-
-};
-window.onresize = function () {
-    svg = d3.select('svg'); //画布对象
-    svgWidth = $('.canvas').width();
-    $('.bgContainer,svg').css({'width': svgWidth})
-
-};
+}
 
 /**
  * 定义d3拖拽.包括设置拖拽时的圆心位置
@@ -130,8 +127,8 @@ function drop(ev) {
     //获取拖拽时设置的id属性
     var id = ev.dataTransfer.getData("id");
     if (id) {
-        var x = computedPosition('x', ev.offsetX - 25);
-        var y = computedPosition('y', ev.offsetY - 25);
+        var x = computedPosition('x', ev.offsetX - nodeOffset);
+        var y = computedPosition('y', ev.offsetY - nodeOffset);
         //记录新增节点
         //包括坐标和节点的styleId [styleId用来指定拖拽到svg后显示的图标]
         nodeList.push({
@@ -346,15 +343,11 @@ function drawLine(_node, _nodeData) {
                 d3.select(this).style({stroke: pathColor, 'stroke-width': 1.5})
             });
 
-
         selectedNodeData.nodeInfo.to = selectedNodeData.nodeInfo.to || [];
         selectedNodeData.nodeInfo.to.push(_nodeData.nodeInfo.name);
 
         _nodeData.nodeInfo.from = _nodeData.nodeInfo.from || [];
         _nodeData.nodeInfo.from.push(selectedNodeData.nodeInfo.name);
-
-        console.log('selected', selectedNodeData);
-        console.log('now', _nodeData);
 
 
         restLine(_node)
@@ -462,20 +455,20 @@ function computedPosition(x_y, value) {
     var temp = value;
     switch (x_y) {
         case 'x':
-            if (value <= 0) {
+            if (value <= 0 || value <= adsorptionIntensity) {
                 temp = 0;
             }
-            if (value >= svgWidth - 50) {
-                temp = svgWidth - 50;
+            if (value >= svgWidth - nodeWidth || value >= svgWidth - nodeWidth - adsorptionIntensity) {
+                temp = svgWidth - nodeWidth;
             }
             return parseInt(temp);
             break;
         case 'y':
-            if (value <= 0) {
+            if (value <= 0 || value <= adsorptionIntensity) {
                 temp = 0;
             }
-            if (value >= svgHeight - 50) {
-                temp = svgHeight - 50;
+            if (value >= svgHeight - nodeHeight || value >= svgHeight - nodeHeight - adsorptionIntensity) {
+                temp = svgHeight - nodeHeight;
             }
             return parseInt(temp);
             break;
