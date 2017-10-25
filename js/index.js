@@ -1,3 +1,51 @@
+var NodeList = new Vue({
+    el: '#NodeList',
+    data: {
+        nodeList: [
+            {
+                name:'数据抓取',
+                type:'1',
+                img: './svg/1.svg'
+            },
+            {
+                name:'读取',
+                type:'2',
+                img: './svg/2.svg'
+            },
+            {
+                name:'输入',
+                type:'3',
+                img: './svg/3.svg'
+            },
+            {
+                name:'输出',
+                type:'4',
+                img: './svg/4.svg'
+            },
+            {
+                name:'编辑',
+                type:'5',
+                img: './svg/5.svg'
+            }]
+    },
+    mounted:function(){
+      /*  console.log($('.node-item img'))*/
+        $('.node-item img').on('dragstart', function (e) {
+         /*   console.log(1)*/
+            drag(e.originalEvent)
+        });
+
+    }
+});
+$('#canvas').on('dragover', function (e) {
+   /* console.log(2)*/
+    allowDrop(e.originalEvent)
+});
+$('#canvas').on('drop', function (e) {
+   /* console.log(111111)*/
+    drop(e.originalEvent)
+});
+
 //svg节点属性字典
 var svgObj = {
     1: './svg/1.svg',
@@ -6,7 +54,6 @@ var svgObj = {
     4: './svg/4.svg',
     5: './svg/5.svg'
 };
-
 var nodeList = [];//节点集合
 var svgWidth = 1200; //画布宽
 var svgHeight = 600;//画布高
@@ -23,7 +70,7 @@ var svg = d3.select('svg');
 window.onload = setSvgSize
 window.onresize = setSvgSize
 
-function setSvgSize(){
+function setSvgSize() {
     svgWidth = $('.canvas').width();
     svgHeight = $(window).height() - 60;
     $('.bgContainer,svg').css(
@@ -33,15 +80,6 @@ function setSvgSize(){
         })
 }
 
-$('.node-item img').on('dragstart',function(e){
-    drag(e.originalEvent)
-});
-$('#canvas').on('dragover' ,function(e){
-    allowDrop(e.originalEvent)
-});
-$('#canvas').on('drop' ,function(e){
-    drop(e.originalEvent)
-});
 
 /**
  * 定义d3拖拽.包括设置拖拽时的圆心位置
@@ -94,7 +132,7 @@ context.attach('.line', [
     {header: 'Options'},
     {
         text: 'Del', href: '#', action: function (e) {
-        console.log(context.target)
+      /*  console.log(context.target)*/
         var path = d3.select(context.target);
         delPath(path)
     }
@@ -124,7 +162,7 @@ function allowDrop(ev) {
  * @param ev 拖拽的事件对象
  */
 function drag(ev) {
-    ev.dataTransfer.setData("id", ev.target.id);
+    ev.dataTransfer.setData("src", ev.target.src);
 }
 
 
@@ -135,8 +173,8 @@ function drag(ev) {
 function drop(ev) {
     ev.preventDefault();
     //获取拖拽时设置的id属性
-    var id = ev.dataTransfer.getData("id");
-    if (id) {
+    var src = ev.dataTransfer.getData("src");
+    if (src) {
         var x = computedPosition('x', ev.offsetX - nodeOffset);
         var y = computedPosition('y', ev.offsetY - nodeOffset);
         //记录新增节点
@@ -145,9 +183,10 @@ function drop(ev) {
             nodeInfo: {
                 x: x,
                 y: y,
-                styleId: id
+                src:src
             }
         });
+
         //在svg上创建对应节点
         createNode();
     }
@@ -195,7 +234,7 @@ function createNode() {
         .attr('width', nodeWidth)
         .attr('height', nodeHeight)
         .attr('xlink:href', function (d) {
-            return svgObj[d.nodeInfo.styleId]
+            return d.nodeInfo.src
         });
     //绑定单击事件
     g.on('click', function (d) {
@@ -392,11 +431,16 @@ function delPath(path, tag) {
 
     //移除元素
     path.remove();
-    console.log(toNode)
-    console.log(fromNode)
+   /* console.log(toNode)
+    console.log(fromNode)*/
 
 }
 
+
+/**
+ * 重置线条样式 [连线完成或者连线出错后重置线条]
+ * @param _node 当前选中的节点
+ */
 function restLine(_node) {
     setTimeout(function () {
         selectedNode.select('polygon')
@@ -415,6 +459,7 @@ function restLine(_node) {
  * @param _nodeData 节点数据
  */
 function nodeSelect(_node, _nodeData) {
+    console.log(_nodeData)
     svg.selectAll('g')
         .filter(function (data) {
             if (data.nodeInfo.name === _nodeData.nodeInfo.name) {

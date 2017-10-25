@@ -25,22 +25,10 @@
         <div class="col-md-2 b-r b-b padder-v">属性设置</div>
     </div>
     <div class="row">
-        <div class="col-md-2 padder-v">
-            <div class="node-item">
-                <img id="1" width="50" src="./svg/1.svg" draggable="true"/>
-                <div>节点1</div>
-            </div>
-            <div class="node-item">
-                <img id="2" width="50" src="./svg/2.svg" draggable="true"/>
-                <div>节点2</div>
-            </div>
-            <div class="node-item">
-                <img id="3" width="50" src="./svg/3.svg" draggable="true"/>
-                <div>节点3</div>
-            </div>
-            <div class="node-item">
-                <img id="4" width="50" src="./svg/4.svg" draggable="true"/>
-                <div>节点4</div>
+        <div class="col-md-2 padder-v" id="NodeList">
+            <div class="node-item" v-for="item in nodeList">
+                <img  width="50" :src="item.img" draggable="true"/>
+                <div>{{item.name}}</div>
             </div>
         </div>
         <div class="col-md-8 canvas">
