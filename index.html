@@ -9,142 +9,53 @@
     <script src="js/vue.js"></script>
     <link rel="stylesheet" href="css/context.standalone.css">
     <link href="https://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/app.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/index.css">
     <script src="https://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
-    <style type="text/css">
-        body {
-            padding: 20px;
-        }
-
-        #div1, .bgContainer {
-            width: 1200px;
-            height: 600px;
-
-        }
-
-        @keyframes marchingants {
-            to {
-                stroke-dashoffset: 20;
-            }
-        }
-
-        rect.strokedrect {
-            stroke-dasharray: 10;
-            animation: marchingants 1s forwards infinite linear;
-        }
-
-        .bgContainer {
-            border: 1px solid #aaaaaa;
-            background: url(bg.jpg);
-        }
-
-        #drag1 {
-            cursor: pointer;
-        }
-
-        .panel{
-            float: left;
-            border:1px solid #ccc;
-        }
-        ul{
-            padding:5px;
-        }
-        ul li {
-            list-style: none;
-            margin-bottom: 20px;
-
-        }
-
-      /*  path {
-            cursor: hand;
-        }*/
-
-        path{
-            stroke-dasharray: 0,1500;
-            stroke-dashoffset: 0;
-            -webkit-animation: polanim 3s   ;
-            animation-fill-mode:forwards;
-            -webkit-animation-fill-mode:both ;
-        }
-
-        @-webkit-keyframes polanim {
-            0% {
-                stroke-dasharray: 0, 1500;
-                stroke-dashoffset: 0;
-            }
-
-            50% {
-                stroke-dasharray: 1500, 0;
-                stroke-dashoffset: 0;
-            }
-
-            100% {
-                stroke-dasharray: 0;
-                stroke-dashoffset: 852;
-            }
-        }
-
-        .polygon{
-            transition: all .5s;
-        }
-        .show{
-            opacity: 1;
-        }
-        .hide{
-            opacity: 0;
-        }
-        .setting{
-            background-color: #e6ebf5;
-            width: 300px;
-        }
-        .setting .body{
-            padding:10px;
-        }
-    </style>
 </head>
 <body>
-<div id="app">
-    <div class="panel">
-        <ul>
-            <li>
-                <div>
-                    <img id="1" width="50" src="./svg/1.svg" draggable="true" ondragstart="drag(event)"/>
-                </div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">3</div>
+        <div class="col-md-8">2</div>
+        <div class="col-md-2">1</div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <div class="node-item">
+                <img id="1" width="50" src="./svg/1.svg" draggable="true" ondragstart="drag(event)"/>
                 <div>节点1</div>
-            </li>
-            <li>
-                <div>
-                    <img id="2" width="50" src="./svg/2.svg" draggable="true" ondragstart="drag(event)"/>
-                </div>
-                <div>节点2</div>
-            </li>
-            <li>
-                <div>
-                    <img id="3" width="50" src="./svg/3.svg" draggable="true" ondragstart="drag(event)"/>
-                </div>
-                <div>节点3</div>
-            </li>
-            <li>
-                <div>
-                    <img id="4" width="50" src="./svg/4.svg" draggable="true" ondragstart="drag(event)"/>
-                </div>
-                <div>节点4</div>
-            </li>
-        </ul>
-    </div>
-    <div class="panel">
-        <div class="bgContainer">
-            <svg id="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
-
-            </svg>
-        </div>
-    </div>
-    <div class="panel">
-        <div class="setting">
-            <div class="head">
-                <span>删除</span>
             </div>
-            <div class="body">
+            <div class="node-item">
+                <img id="2" width="50" src="./svg/2.svg" draggable="true" ondragstart="drag(event)"/>
+                <div>节点2</div>
+            </div>
+            <div class="node-item">
+                <img id="3" width="50" src="./svg/3.svg" draggable="true" ondragstart="drag(event)"/>
+                <div>节点3</div>
+            </div>
+            <div class="node-item">
+                <img id="4" width="50" src="./svg/4.svg" draggable="true" ondragstart="drag(event)"/>
+                <div>节点4</div>
+            </div>
+        </div>
+        <div class="col-md-8 canvas">
+            <div class="bgContainer">
+                <svg id="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
 
+                </svg>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="setting">
+                <div class="head">
+                    <span>删除</span>
+                </div>
+                <div class="body">
+
+                </div>
             </div>
         </div>
     </div>

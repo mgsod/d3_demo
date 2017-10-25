@@ -8,17 +8,27 @@ var svgObj = {
 };
 
 var nodeList = [];//节点集合
-var svgWidth = 1000; //画布宽
+var svgWidth = 1200; //画布宽
 var svgHeight = 600;//画布高
 var nodeWidth = 50; //节点宽
 var nodeHeight = 50; //节点高
 var allowPath = true; //是否允许Path跟随
 var nodeOffset = 25;//节点圆心偏移量
-var svg = d3.select('svg'); //画布对象
 var isSelectStart = false; //连线时判断是否已经选择起始节点
 var selectedNodeData; //连线时 已选择节点的节点数据
 var selectedNode; // 已选择的节点
+var pathColor = '#565656';
+var svg = d3.select('svg');
+window.onload = function () {
+    svgWidth = $('.canvas').width();
+    $('.bgContainer,svg').css({'width': svgWidth})
+}
+window.onresize = function () {
+    svg = d3.select('svg'); //画布对象
+    svgWidth = $('.canvas').width();
+    $('.bgContainer,svg').css({'width': svgWidth})
 
+};
 
 /**
  * 定义d3拖拽.包括设置拖拽时的圆心位置
@@ -88,7 +98,7 @@ svg.append('svg:defs').append('svg:marker')
     .attr('orient', 'auto')
     .append('svg:path')
     .attr('d', 'M0,-5L10,0L0,5')//绘制箭头形状
-    .attr('fill', '#ffad33');
+    .attr('fill', pathColor);
 
 
 //html5拖拽结束 阻止默认行为
@@ -193,25 +203,16 @@ function createNode() {
             d3.event.stopPropagation();
             drawLine(g, d);
 
-
         }).on('mouseover', function () {
         d3.select(this)
-            .classed('show', true)
-        //.attr('fill', '#ffad33')
+            .classed('show', true);
     }).on('mouseout', function () {
 
-        /*   d3.select(this)
-               .classed('show', false)
-               .attr('fill', 'none')
-*/
-
     });
-
 
     //绑定拖拽事件
     svg.selectAll('g')
         .call(drag1);
-
 }
 
 
@@ -225,10 +226,10 @@ function delNode(node) {
     nodeList.splice(getNodeIndexByName(nodeList, name), 1);
     d3.selectAll('[from=' + name + ']')
         .filter(function () {
-            delPath(d3.select(this),'from');
+            delPath(d3.select(this), 'from');
 
         });
-    d3.selectAll('[to=' + name + ']','to')
+    d3.selectAll('[to=' + name + ']', 'to')
         .filter(function () {
             delPath(d3.select(this));
         });
@@ -236,7 +237,7 @@ function delNode(node) {
 
     //绑定拖拽事件
     svg.selectAll('g')
-        .call(drag1)
+        .call(drag1);
     selectedNodeData = null;
 }
 
@@ -260,7 +261,6 @@ function dragMove(_nodeData, _nodeIndex) {
     //判断节点拖动时. 是否需要线条跟随
     if (allowPath) {
         var name = _nodeData.nodeInfo.name;
-
         var toPath = svg.selectAll('[to=' + name + ']');
         var fromPath = svg.selectAll('[from=' + name + ']');
         if (toPath.size() > 0) {
@@ -330,17 +330,16 @@ function drawLine(_node, _nodeData) {
             .attr('class', 'line')
             .style({
                 fill: 'none',
-                stroke: '#fc0',
+                stroke: pathColor,
                 'stroke-width': 1.5
             })
             .on('mouseover', function () {
                 d3.select(this).style({stroke: '#ffad33', 'stroke-width': 2.8})
             })
             .on('mouseout', function () {
-                d3.select(this).style({stroke: '#fc0', 'stroke-width': 1.5})
-            })
+                d3.select(this).style({stroke: pathColor, 'stroke-width': 1.5})
+            });
 
-        //addAnimatedPath(_nodeData);
 
         selectedNodeData.nodeInfo.to = selectedNodeData.nodeInfo.to || [];
         selectedNodeData.nodeInfo.to.push(_nodeData.nodeInfo.name);
@@ -356,20 +355,6 @@ function drawLine(_node, _nodeData) {
     }
 }
 
-function addAnimatedPath(_nodeData){
-    svg.append('path')
-        .attr('d', function () {
-            return 'M' + (selectedNodeData.nodeInfo.x + nodeOffset) + ' ' + (selectedNodeData.nodeInfo.y + nodeOffset) + ' L' + (_nodeData.nodeInfo.x + nodeOffset) + ' ' + (_nodeData.nodeInfo.y + nodeOffset)
-        })
-
-        .attr('class', 'animated')
-        .style({
-            fill: 'none',
-            stroke: 'red',
-            'stroke-width': 1.5
-        })
-}
-
 /**
  *  移除线条
  * @param path 线条
@@ -378,18 +363,18 @@ function addAnimatedPath(_nodeData){
  * 如果传入from 则移除终点节点里的from对应的项
  * 如果未传入则视为仅仅删除线条 移除起点和终点中对应的项
  */
-function delPath(path,tag) {
+function delPath(path, tag) {
     var path_to = path.attr('to');
     var path_from = path.attr('from');
 
-    if(!tag || tag === "from"){
+    if (!tag || tag === "from") {
         //移除终点节点中from的项
         var index_to = getNodeIndexByName(nodeList, path_to);
         var toNode = nodeList[index_to];
         toNode.nodeInfo.from.splice(toNode.nodeInfo.from.indexOf(path_from), 1);
     }
 
-    if(!tag || tag === "to"){
+    if (!tag || tag === "to") {
         //移除起点节点中to的项
         var index_from = getNodeIndexByName(nodeList, path_from);
         var fromNode = nodeList[index_from];
@@ -477,7 +462,7 @@ function computedPosition(x_y, value) {
             if (value >= svgWidth - 50) {
                 temp = svgWidth - 50;
             }
-            return temp;
+            return parseInt(temp);
             break;
         case 'y':
             if (value <= 0) {
@@ -486,7 +471,7 @@ function computedPosition(x_y, value) {
             if (value >= svgHeight - 50) {
                 temp = svgHeight - 50;
             }
-            return temp;
+            return parseInt(temp);
             break;
     }
 }
