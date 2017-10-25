@@ -54,8 +54,33 @@
 
         }
 
-        path {
+      /*  path {
             cursor: hand;
+        }*/
+
+        path{
+            stroke-dasharray: 0,1500;
+            stroke-dashoffset: 0;
+            -webkit-animation: polanim 3s   ;
+            animation-fill-mode:forwards;
+            -webkit-animation-fill-mode:both ;
+        }
+
+        @-webkit-keyframes polanim {
+            0% {
+                stroke-dasharray: 0, 1500;
+                stroke-dashoffset: 0;
+            }
+
+            50% {
+                stroke-dasharray: 1500, 0;
+                stroke-dashoffset: 0;
+            }
+
+            100% {
+                stroke-dasharray: 0;
+                stroke-dashoffset: 852;
+            }
         }
 
         .polygon{

@@ -88,7 +88,7 @@ svg.append('svg:defs').append('svg:marker')
     .attr('orient', 'auto')
     .append('svg:path')
     .attr('d', 'M0,-5L10,0L0,5')//绘制箭头形状
-    .attr('fill', 'black');
+    .attr('fill', '#ffad33');
 
 
 //html5拖拽结束 阻止默认行为
@@ -330,15 +330,17 @@ function drawLine(_node, _nodeData) {
             .attr('class', 'line')
             .style({
                 fill: 'none',
-                stroke: 'black',
+                stroke: '#fc0',
                 'stroke-width': 1.5
             })
             .on('mouseover', function () {
-                d3.select(this).style({stroke: '#fca326', 'stroke-width': 2.8})
+                d3.select(this).style({stroke: '#ffad33', 'stroke-width': 2.8})
             })
             .on('mouseout', function () {
-                d3.select(this).style({stroke: 'black', 'stroke-width': 1.5})
-            });
+                d3.select(this).style({stroke: '#fc0', 'stroke-width': 1.5})
+            })
+
+        //addAnimatedPath(_nodeData);
 
         selectedNodeData.nodeInfo.to = selectedNodeData.nodeInfo.to || [];
         selectedNodeData.nodeInfo.to.push(_nodeData.nodeInfo.name);
@@ -354,6 +356,19 @@ function drawLine(_node, _nodeData) {
     }
 }
 
+function addAnimatedPath(_nodeData){
+    svg.append('path')
+        .attr('d', function () {
+            return 'M' + (selectedNodeData.nodeInfo.x + nodeOffset) + ' ' + (selectedNodeData.nodeInfo.y + nodeOffset) + ' L' + (_nodeData.nodeInfo.x + nodeOffset) + ' ' + (_nodeData.nodeInfo.y + nodeOffset)
+        })
+
+        .attr('class', 'animated')
+        .style({
+            fill: 'none',
+            stroke: 'red',
+            'stroke-width': 1.5
+        })
+}
 
 /**
  *  移除线条
