@@ -33,6 +33,16 @@ function setSvgSize(){
         })
 }
 
+$('.node-item img').on('dragstart',function(e){
+    drag(e.originalEvent)
+});
+$('#canvas').on('dragover' ,function(e){
+    allowDrop(e.originalEvent)
+});
+$('#canvas').on('drop' ,function(e){
+    drop(e.originalEvent)
+});
+
 /**
  * 定义d3拖拽.包括设置拖拽时的圆心位置
  */

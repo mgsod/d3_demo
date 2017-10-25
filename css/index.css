@@ -1,8 +1,4 @@
 
-#div1, .bgContainer {
-    width: 1200px;
-    height: 600px;
-}
 /**
  选中节点效果
  */
@@ -17,7 +13,7 @@ rect.strokedrect {
 }
 
 .bgContainer {
-    background: url(../img/bg.jpg);
+    background: url(../img/bg.png);
 }
 .canvas{
     padding:0px;
@@ -57,13 +53,6 @@ path{
 }
 .hide{
     opacity: 0;
-}
-.setting{
-    background-color: #e6ebf5;
-    width: 300px;
-}
-.setting .body{
-    padding:10px;
 }
 .node-item{
     display: inline-block;

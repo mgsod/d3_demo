@@ -27,37 +27,84 @@
     <div class="row">
         <div class="col-md-2 padder-v">
             <div class="node-item">
-                <img id="1" width="50" src="./svg/1.svg" draggable="true" ondragstart="drag(event)"/>
+                <img id="1" width="50" src="./svg/1.svg" draggable="true"/>
                 <div>节点1</div>
             </div>
             <div class="node-item">
-                <img id="2" width="50" src="./svg/2.svg" draggable="true" ondragstart="drag(event)"/>
+                <img id="2" width="50" src="./svg/2.svg" draggable="true"/>
                 <div>节点2</div>
             </div>
             <div class="node-item">
-                <img id="3" width="50" src="./svg/3.svg" draggable="true" ondragstart="drag(event)"/>
+                <img id="3" width="50" src="./svg/3.svg" draggable="true"/>
                 <div>节点3</div>
             </div>
             <div class="node-item">
-                <img id="4" width="50" src="./svg/4.svg" draggable="true" ondragstart="drag(event)"/>
+                <img id="4" width="50" src="./svg/4.svg" draggable="true"/>
                 <div>节点4</div>
             </div>
         </div>
         <div class="col-md-8 canvas">
             <div class="bgContainer b-b b-l b-r">
-                <svg id="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <svg id="canvas">
 
                 </svg>
             </div>
         </div>
-        <div class="col-md-2">
-            <div class="setting">
-                <div class="head">
-                    <span>删除</span>
-                </div>
-                <div class="body">
-
-                </div>
+        <div class="col-md-2 setting">
+            <div class="panel-body">
+                <form role="form">
+                    <div class="form-group">
+                        <label>节点名称</label>
+                        <input type="text" class="form-control" placeholder="节点名称">
+                    </div>
+                    <div class="form-group">
+                        <label>流程</label>
+                        <input type="text" class="form-control" placeholder="流程">
+                    </div>
+                    <div class="form-group">
+                        <label>数据源</label>
+                        <input type="text" class="form-control" placeholder="数据源">
+                    </div>
+                    <div class="form-group">
+                        <label>数据源类型</label>
+                        <input type="text" class="form-control" placeholder="数据源类型">
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in m-t-lg"></div>
+                    <div class="m-t-md text-center">上节点输出</div>
+                    <div class="form-group">
+                        <label>关键词</label>
+                        <select class="form-control">
+                            <option value="">无</option>
+                            <option value="16">列表标题</option>
+                            <option value="17">网站链接</option>
+                            <option value="18">内容摘要</option>
+                            <option value="19">发布时间</option>
+                            <option value="29">内容</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>文章标题</label>
+                        <select class="form-control">
+                            <option value="">无</option>
+                            <option value="16">列表标题</option>
+                            <option value="17">网站链接</option>
+                            <option value="18">内容摘要</option>
+                            <option value="19">发布时间</option>
+                            <option value="29">内容</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>内容路径</label>
+                        <select class="form-control">
+                            <option value="">无</option>
+                            <option value="16">列表标题</option>
+                            <option value="17">网站链接</option>
+                            <option value="18">内容摘要</option>
+                            <option value="19">发布时间</option>
+                            <option value="29">内容</option>
+                        </select>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
