@@ -29,20 +29,15 @@ var NodeList = new Vue({
             }]
     },
     mounted:function(){
-      /*  console.log($('.node-item img'))*/
         $('.node-item img').on('dragstart', function (e) {
-         /*   console.log(1)*/
             drag(e.originalEvent)
         });
-
     }
 });
 $('#canvas').on('dragover', function (e) {
-   /* console.log(2)*/
     allowDrop(e.originalEvent)
 });
 $('#canvas').on('drop', function (e) {
-   /* console.log(111111)*/
     drop(e.originalEvent)
 });
 
@@ -67,9 +62,13 @@ var selectedNode; // 已选择的节点
 var pathColor = '#565656';
 var adsorptionIntensity = 20; //节点和画布边缘的吸附强度
 var svg = d3.select('svg');
-window.onload = setSvgSize
-window.onresize = setSvgSize
+window.onload = setSvgSize;
+window.onresize = setSvgSize;
 
+
+/**
+ * 设置画布大小
+ */
 function setSvgSize() {
     svgWidth = $('.canvas').width();
     svgHeight = $(window).height() - 60;
