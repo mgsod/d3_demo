@@ -1,37 +1,56 @@
+var NODE_SETTING = {
+    1: {
+        img: './svg/1.svg'
+    },
+    2: {
+        img: './svg/2.svg'
+    },
+    3: {
+        img: './svg/3.svg'
+    },
+    4: {
+        img: './svg/4.svg'
+    },
+    5: {
+        img: './svg/5.svg'
+    }
+};
+
+
 var NodeList = new Vue({
     el: '#NodeList',
     data: {
         nodeList: [
             {
-                name:'数据抓取',
-                type:'1',
-                img: './svg/1.svg'
+                name: '数据抓取',
+                type: '1'
             },
             {
-                name:'读取',
-                type:'2',
-                img: './svg/2.svg'
+                name: '读取',
+                type: '2'
             },
             {
-                name:'输入',
-                type:'3',
-                img: './svg/3.svg'
+                name: '输入',
+                type: '3'
             },
             {
-                name:'输出',
-                type:'4',
-                img: './svg/4.svg'
+                name: '输出',
+                type: '4'
             },
             {
-                name:'编辑',
-                type:'5',
-                img: './svg/5.svg'
+                name: '编辑',
+                type: '5'
             }]
     },
-    mounted:function(){
+    mounted: function () {
         $('.node-item img').on('dragstart', function (e) {
             drag(e.originalEvent)
         });
+    },
+    filters:{
+        getImg:function(item){
+            return NODE_SETTING[item.type].img
+        }
     }
 });
 $('#canvas').on('dragover', function (e) {
@@ -42,13 +61,7 @@ $('#canvas').on('drop', function (e) {
 });
 
 //svg节点属性字典
-var svgObj = {
-    1: './svg/1.svg',
-    2: './svg/2.svg',
-    3: './svg/3.svg',
-    4: './svg/4.svg',
-    5: './svg/5.svg'
-};
+
 var nodeList = [];//节点集合
 var svgWidth = 1200; //画布宽
 var svgHeight = 600;//画布高
@@ -131,7 +144,7 @@ context.attach('.line', [
     {header: 'Options'},
     {
         text: 'Del', href: '#', action: function (e) {
-      /*  console.log(context.target)*/
+        /*  console.log(context.target)*/
         var path = d3.select(context.target);
         delPath(path)
     }
@@ -161,7 +174,7 @@ function allowDrop(ev) {
  * @param ev 拖拽的事件对象
  */
 function drag(ev) {
-    ev.dataTransfer.setData("src", ev.target.src);
+    ev.dataTransfer.setData("type", $(ev.target).attr('data-type'));
 }
 
 
@@ -172,8 +185,8 @@ function drag(ev) {
 function drop(ev) {
     ev.preventDefault();
     //获取拖拽时设置的id属性
-    var src = ev.dataTransfer.getData("src");
-    if (src) {
+    var type = ev.dataTransfer.getData("type");
+    if (type) {
         var x = computedPosition('x', ev.offsetX - nodeOffset);
         var y = computedPosition('y', ev.offsetY - nodeOffset);
         //记录新增节点
@@ -182,7 +195,7 @@ function drop(ev) {
             nodeInfo: {
                 x: x,
                 y: y,
-                src:src
+                type: type
             }
         });
 
@@ -233,7 +246,7 @@ function createNode() {
         .attr('width', nodeWidth)
         .attr('height', nodeHeight)
         .attr('xlink:href', function (d) {
-            return d.nodeInfo.src
+            return NODE_SETTING[d.nodeInfo.type].img
         });
     //绑定单击事件
     g.on('click', function (d) {
@@ -430,8 +443,8 @@ function delPath(path, tag) {
 
     //移除元素
     path.remove();
-   /* console.log(toNode)
-    console.log(fromNode)*/
+    /* console.log(toNode)
+     console.log(fromNode)*/
 
 }
 

@@ -27,7 +27,7 @@
     <div class="row">
         <div class="col-md-2 padder-v" id="NodeList">
             <div class="node-item" v-for="item in nodeList">
-                <img  width="50" :src="item.img" draggable="true"/>
+                <img  :data-type="item.type" width="50" :src="item | getImg" draggable="true"/>
                 <div>{{item.name}}</div>
             </div>
         </div>
