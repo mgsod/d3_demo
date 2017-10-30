@@ -1,6 +1,10 @@
 var NODE_SETTING = {
     1: {
-        img: './svg/1.svg'
+        img: './svg/1.svg',
+        data:{
+            name:'数据抓取'
+
+        }
     },
     2: {
         img: './svg/2.svg'
@@ -50,16 +54,32 @@ var v_nodeList = new Vue({
             drag(e.originalEvent)
         });
     },
-    filters:{
-        getImg:function(item){
+    filters: {
+        getImg: function (item) {
             return NODE_SETTING[item.type].img
         }
     }
 });
 
 var v_nodeSetting = new Vue({
+    el: '#setting',
+    data: {
+        type: -1,
+        name:'',
+        data: {
+            1: {
+                name: '',
+                process:"",
+                dataSource:'',
+                dataSourceType:''
+            }
+        }
+    },
+    methods:{
 
-})
+    }
+
+});
 $('#canvas').on('dragover', function (e) {
     allowDrop(e.originalEvent)
 });
@@ -203,7 +223,8 @@ function drop(ev) {
                 x: x,
                 y: y,
                 type: type
-            }
+            },
+            data:$.extend({},NODE_SETTING[type].data)
         });
 
         //在svg上创建对应节点
@@ -302,7 +323,7 @@ function delNode(node) {
         });
     d3.selectAll('[to=' + name + ']')
         .filter(function () {
-            delPath(d3.select(this),'to');
+            delPath(d3.select(this), 'to');
         });
 
 
@@ -478,6 +499,13 @@ function restLine(_node) {
  */
 function nodeSelect(_node, _nodeData) {
     console.log(_nodeData)
+    var type = _nodeData.nodeInfo.type;
+    var data = _nodeData.data;
+    var name = _nodeData.nodeInfo.name;
+    v_nodeSetting.type = type;
+    v_nodeSetting.data[type] = data;
+    v_nodeSetting.name = name;
+
     svg.selectAll('g')
         .filter(function (data) {
             if (data.nodeInfo.name === _nodeData.nodeInfo.name) {

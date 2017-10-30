@@ -60,3 +60,6 @@ path{
     text-align: center;
     margin-bottom: 15px;
 }
+[v-cloak]{
+    display: none;
+}
