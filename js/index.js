@@ -3,20 +3,24 @@ var NODE_SETTING = {
         img: './svg/1.svg',
         data:{
             name:'数据抓取'
-
-        }
+        },
+        color:'#ffad33'
     },
     2: {
-        img: './svg/2.svg'
+        img: './svg/2.svg',
+        color:'#23b7e5'
     },
     3: {
-        img: './svg/3.svg'
+        img: './svg/3.svg',
+        color:'#7266ba'
     },
     4: {
-        img: './svg/4.svg'
+        img: './svg/4.svg',
+        color:'#f05050'
     },
     5: {
-        img: './svg/5.svg'
+        img: './svg/5.svg',
+        color:'#27c24c'
     }
 };
 
@@ -286,12 +290,16 @@ function createNode() {
     g.append('polygon')
         .attr('points', '53,15 53,35 65,25')
         .attr('fill', '#fff')
-        .attr('stroke', '#ffad33')
+        .attr('stroke', function(d){
+            return NODE_SETTING[d.nodeInfo.type].color
+        })
         .attr('stroke-width', 1.5)
         .classed('polygon show', true)
         .on('click', function (d) {
             d3.select(this)
-                .attr('fill', '#ffad33');
+                .attr('fill',function(d){
+                    return NODE_SETTING[d.nodeInfo.type].color
+                });
             d3.event.stopPropagation();
             drawLine(g, d);
 
