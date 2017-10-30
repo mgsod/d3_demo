@@ -17,7 +17,10 @@ var NODE_SETTING = {
 };
 
 
-var NodeList = new Vue({
+/**
+ * 左侧节点面板
+ */
+var v_nodeList = new Vue({
     el: '#NodeList',
     data: {
         nodeList: [
@@ -53,6 +56,10 @@ var NodeList = new Vue({
         }
     }
 });
+
+var v_nodeSetting = new Vue({
+
+})
 $('#canvas').on('dragover', function (e) {
     allowDrop(e.originalEvent)
 });
@@ -293,9 +300,9 @@ function delNode(node) {
             delPath(d3.select(this), 'from');
 
         });
-    d3.selectAll('[to=' + name + ']', 'to')
+    d3.selectAll('[to=' + name + ']')
         .filter(function () {
-            delPath(d3.select(this));
+            delPath(d3.select(this),'to');
         });
 
 
@@ -427,24 +434,23 @@ function delPath(path, tag) {
     var path_to = path.attr('to');
     var path_from = path.attr('from');
 
+
     if (!tag || tag === "from") {
         //移除终点节点中from的项
         var index_to = getNodeIndexByName(nodeList, path_to);
         var toNode = nodeList[index_to];
-        toNode.nodeInfo.from.splice(toNode.nodeInfo.from.indexOf(path_from), 1);
+        index_to && toNode.nodeInfo.from.splice(toNode.nodeInfo.from.indexOf(path_from), 1);
     }
 
     if (!tag || tag === "to") {
         //移除起点节点中to的项
         var index_from = getNodeIndexByName(nodeList, path_from);
         var fromNode = nodeList[index_from];
-        fromNode.nodeInfo.to.splice(fromNode.nodeInfo.to.indexOf(path_to), 1);
+        index_from && fromNode.nodeInfo.to.splice(fromNode.nodeInfo.to.indexOf(path_to), 1);
     }
 
     //移除元素
     path.remove();
-    /* console.log(toNode)
-     console.log(fromNode)*/
 
 }
 
@@ -495,6 +501,7 @@ function nodeSelect(_node, _nodeData) {
                     .classed('show', false)
             }
         });
+
 }
 
 
