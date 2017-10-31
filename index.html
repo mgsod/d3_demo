@@ -18,10 +18,12 @@
 <body>
 <div class="container-fluid">
     <div class="row text-center">
-        <div class="col-md-2 b-r b-b padder-v">
+        <div class="col-md-2  b-b padder-v">
             节点列表
         </div>
-        <div class="col-md-8 b-r b-b padder-v canvas-head">画布</div>
+        <div class="col-md-8 b-l b-r b-b canvas-head" style="padding:8px 0">
+            <button type="button" class="btn btn-default w-xs">保 存</button>
+        </div>
         <div class="col-md-2 b-r b-b padder-v">属性设置</div>
     </div>
     <div class="row">
@@ -94,12 +96,6 @@
                     </div>
                 </div>
 
-
-
-
-                <div class="text-center" v-show="type != -1">
-                    <button type="button" class="btn btn-info" >确认</button>
-                </div>
             </div>
         </div>
     </div>
