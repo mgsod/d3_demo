@@ -99,7 +99,16 @@ $('#canvas').on('drop', function (e) {
 Node.init({
     canvas:d3.select('svg'),
     nodeList:nodeList,
-    nodeSetting:NODE_SETTING
+    nodeSetting:NODE_SETTING,
+    onNodeClick:function(){
+        console.log(1)
+    },
+    onDrawLine:function(){
+        console.log(2)
+    },
+    onCreateNode:function(){
+        console.log(3)
+    }
 });
 
 
@@ -187,6 +196,7 @@ function drop(ev) {
 
         //在svg上创建对应节点
         Node.createNode();
+        console.log(nodeList)
     }
 
 }

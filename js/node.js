@@ -23,6 +23,12 @@ var Node = {
         this.pathColor = options.pathColor || '#565656'; //线条颜色 默认 '#565656'
         this.allowPath = false; //拖拽节点时是否允许线条跟随
 
+        //event
+        this.onNodeClick = options.onNodeClick;
+        this.onDrawLine = options.onDrawLine;
+        this.onCreateNode = options.onCreateNode
+
+
         window.onload = setSvgSize;
         window.onresize = setSvgSize;
 
@@ -125,6 +131,8 @@ var Node = {
         //绑定拖拽事件
         Node.canvas.selectAll('g')
             .call(Node.drag());
+        this.onCreateNode && this.onCreateNode();
+
     },
 
     /**
@@ -166,8 +174,8 @@ var Node = {
         //判断节点拖动时. 是否需要线条跟随
         if (Node.allowPath) {
             var name = _nodeData.nodeInfo.name;
-            var toPath = svg.selectAll('[to=' + name + ']');
-            var fromPath = svg.selectAll('[from=' + name + ']');
+            var toPath = Node.canvas.selectAll('[to=' + name + ']');
+            var fromPath = Node.canvas.selectAll('[from=' + name + ']');
             if (toPath.size() > 0) {
                 toPath.filter(function () {
                     var toD = d3.select(this).attr('d');
@@ -203,7 +211,6 @@ var Node = {
      * @param _nodeData 节点数据
      */
     clickNode: function (_node, _nodeData) {
-        console.log(_nodeData)
         var type = _nodeData.nodeInfo.type;
         var data = _nodeData.data;
         var name = _nodeData.nodeInfo.name;
@@ -233,6 +240,8 @@ var Node = {
                         .classed('show', false)
                 }
             });
+
+        this.onNodeClick && this.onNodeClick();
     },
 
     /**
@@ -288,6 +297,7 @@ var Node = {
             _nodeData.nodeInfo.from = _nodeData.nodeInfo.from || [];
             _nodeData.nodeInfo.from.push(Node.selectedNodeData.nodeInfo.name);
 
+            this.onDrawLine && this.onDrawLine();
 
             Node.restLine(_node)
         }
