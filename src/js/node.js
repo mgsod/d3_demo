@@ -197,7 +197,6 @@ module.exports = {
             //将进行边缘碰撞计算后的值赋值给节点对象的x,y.
             _nodeData.nodeInfo.x = _this.computedPosition('x', d3.event.x);
             _nodeData.nodeInfo.y = _this.computedPosition('y', d3.event.y);
-            console.log(_this.svgWidth)
             //除开本节点 其他需要进行碰撞检测的节点
             var collisionArr = _this.copyArr(_this.nodeList, _nodeIndex);
             //获取其他节点离本节点最近的节点索引
@@ -356,7 +355,7 @@ module.exports = {
         if (!tag || tag === "from") {
             //移除终点节点中from的项
             var index_to = _this.getNodeIndexByName(_this.nodeList, path_to);
-            var toNode = nodeList[index_to];
+            var toNode = _this.nodeList[index_to];
             index_to && toNode.nodeInfo.from.splice(toNode.nodeInfo.from.indexOf(path_from), 1);
         }
 
@@ -376,7 +375,7 @@ module.exports = {
      * @param node 选中的节点对象[d3]
      */
     delNode: function (node) {
-        console.log(11)
+
         var _this = this;
         var name = node.attr('id');
         node.remove();
