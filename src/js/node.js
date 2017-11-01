@@ -34,14 +34,17 @@ module.exports = {
         window.onresize = setSvgSize(this);
 
         function setSvgSize(_this) {
+            return function(){
+                _this.svgWidth = $('.canvas').width();
+                _this.svgHeight = $(window).height() - 60;
+                $('.bgContainer,svg').css(
+                    {
+                        'width': _this.svgWidth,
+                        'height': _this.svgHeight
+                    })
+            }
 
-            _this.svgWidth = $('.canvas').width();
-            _this.svgHeight = $(window).height() - 60;
-            $('.bgContainer,svg').css(
-                {
-                    'width': _this.svgWidth,
-                    'height': _this.svgHeight
-                })
+
         }
         alert.options = {
             "closeButton": true,
@@ -77,7 +80,6 @@ module.exports = {
      */
     createNode: function () {
         var _this = this;
-
         var g = _this.canvas.selectAll('g')
             .data(_this.nodeList)
             .enter()
@@ -123,13 +125,14 @@ module.exports = {
             if (d3.event.defaultPrevented) return; //防止拖动触发单击事件
             _this.clickNode(g, d);
 
-
         });
 
         g.append('polygon')
             .attr('points', '53,15 53,35 65,25')
             .attr('fill', '#fff')
             .attr('stroke', function (d) {
+                //默认选中当前节点
+                _this.clickNode(g,d);
                 return _this.nodeSetting[d.nodeInfo.type].color
             })
             .attr('stroke-width', 1)

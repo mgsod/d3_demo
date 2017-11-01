@@ -115,11 +115,9 @@ Node.init({
     }
 });
 
-$.get('https://easy-mock.com/mock/59f9602d3d31c97b90482dbb/example/test')
 
 //初始化右键菜单插件
 context.init({preventDoublecontext: false});
-
 
 //绑定节点右键菜单
 context.attach('.node', [
@@ -168,7 +166,7 @@ function drop(ev) {
         var x = Node.computedPosition('x', ev.offsetX - Node.nodeOffset);
         var y = Node.computedPosition('y', ev.offsetY - Node.nodeOffset);
         //记录新增节点
-        //包括坐标和节点的styleId [styleId用来指定拖拽到svg后显示的图标]
+        //包括坐标和节点的type [styleId用来指定拖拽到svg后显示的图标]
         nodeList.push({
             nodeInfo: {
                 x: x,
