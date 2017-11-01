@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack -p --watch"
+    "dev": "webpack --watch",
+    "build": "webpacl -p"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/mgsod/d3_demo/issues"
   },
-  "homepage": "https://github.com/mgsod/d3_demo#readme"
+  "homepage": "https://github.com/mgsod/d3_demo#readme",
+  "devDependencies": {
+    "copy-webpack-plugin": "^4.2.0",
+    "html-webpack-plugin": "^2.30.1"
+  }
 }

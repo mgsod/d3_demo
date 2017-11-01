@@ -94,7 +94,7 @@ module.exports = {
                 if (!name) {
                     //如果是新建则取时间戳作为唯一名
                     var time = new Date().getTime();
-                    d.nodeInfo.name = 'node_1' + time;
+                    d.nodeInfo.name = 'node_' + time;
                     return 'node_' + time;
                 } else {
                     //如果更新节点则以之前名为命名
@@ -327,7 +327,6 @@ module.exports = {
                 .on('mouseout', function () {
                     d3.select(this).style({stroke: _this.pathColor, 'stroke-width': 1.5})
                 });
-
             _this.selectedNodeData.nodeInfo.to = _this.selectedNodeData.nodeInfo.to || [];
             _this.selectedNodeData.nodeInfo.to.push(_nodeData.nodeInfo.name);
 
@@ -377,6 +376,7 @@ module.exports = {
      * @param node 选中的节点对象[d3]
      */
     delNode: function (node) {
+        console.log(11)
         var _this = this;
         var name = node.attr('id');
         node.remove();

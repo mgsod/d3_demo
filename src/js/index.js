@@ -5,7 +5,7 @@ var Node = require('./node.js');
 
 var NODE_SETTING = {
     1: {
-        img: './svg/1.svg',
+        img: 'static/svg/1.svg',
         data: {
             name: '数据抓取',
             test:{
@@ -15,19 +15,19 @@ var NODE_SETTING = {
         color: '#ffad33'
     },
     2: {
-        img: './svg/2.svg',
+        img: 'static/svg/2.svg',
         color: '#23b7e5'
     },
     3: {
-        img: './svg/3.svg',
+        img: 'static/svg/3.svg',
         color: '#7266ba'
     },
     4: {
-        img: './svg/4.svg',
+        img: 'static/svg/4.svg',
         color: '#f05050'
     },
     5: {
-        img: './svg/5.svg',
+        img: 'static/svg/5.svg',
         color: '#27c24c'
     }
 };
@@ -114,7 +114,8 @@ Node.init({
 
     }
 });
-console.log(Node.canvas)
+
+$.get('https://easy-mock.com/mock/59f9602d3d31c97b90482dbb/example/test')
 
 //初始化右键菜单插件
 context.init({preventDoublecontext: false});
