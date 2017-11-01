@@ -1,7 +1,7 @@
 /**
  * Created by setting on 2017/10/31 0031.
  */
-
+var Node = require('./node.js');
 
 var NODE_SETTING = {
     1: {
@@ -34,7 +34,7 @@ var NODE_SETTING = {
 
 var nodeList = [];//节点集合
 
-var v_nodeList = new Vue({
+new Vue({
     name:'nodeList',
     el: '#NodeList',
     data: {
@@ -103,6 +103,7 @@ Node.init({
     nodeList:nodeList,
     nodeSetting:NODE_SETTING,
     nodeWidth:50,
+    vue_setting:v_nodeSetting,
     onNodeClick:function(){
 
     },
@@ -113,25 +114,11 @@ Node.init({
 
     }
 });
+console.log(Node.canvas)
 
 //初始化右键菜单插件
-context.init({preventDoubleContext: false});
+context.init({preventDoublecontext: false});
 
-toastr.options = {
-    "closeButton": true,
-    "debug": false,
-    "progressBar": false,
-    "positionClass": "toast-top-center",
-    "onclick": null,
-    "showDuration": "300",
-    "hideDuration": "1000",
-    "timeOut": "3000",
-    "extendedTimeOut": "1000",
-    "showEasing": "swing",
-    "hideEasing": "swing",
-    "showMethod": "fadeIn",
-    "hideMethod": "slideUp"
-};
 
 //绑定节点右键菜单
 context.attach('.node', [
