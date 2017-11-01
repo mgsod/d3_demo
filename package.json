@@ -1,0 +1,19 @@
+{
+  "name": "d3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack -p --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mgsod/d3_demo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mgsod/d3_demo/issues"
+  },
+  "homepage": "https://github.com/mgsod/d3_demo#readme"
+}
