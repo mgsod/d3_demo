@@ -59,6 +59,7 @@ var Node = {
      * 创建节点
      */
     createNode: function () {
+        var _this = this;
         var g = Node.canvas.selectAll('g')
             .data(Node.nodeList)
             .enter()
@@ -71,10 +72,11 @@ var Node = {
             .attr('id', function (d) {
                 //设置节点名称
                 var name = d.nodeInfo.name;
+                _this.onCreateNode(d);
                 if (!name) {
                     //如果是新建则取时间戳作为唯一名
                     var time = new Date().getTime();
-                    d.nodeInfo.name = 'node_' + time;
+                    d.nodeInfo.name = 'node_1' + time;
                     return 'node_' + time;
                 } else {
                     //如果更新节点则以之前名为命名
@@ -105,13 +107,14 @@ var Node = {
 
 
         });
+
         g.append('polygon')
             .attr('points', '53,15 53,35 65,25')
             .attr('fill', '#fff')
             .attr('stroke', function (d) {
                 return Node.nodeSetting[d.nodeInfo.type].color
             })
-            .attr('stroke-width', 1.5)
+            .attr('stroke-width', 1)
             .classed('polygon show', true)
             .on('click', function (d) {
                 d3.select(this)
@@ -120,18 +123,29 @@ var Node = {
                     });
                 d3.event.stopPropagation();
                 Node.drawLine(g, d);
-
-            }).on('mouseover', function () {
+            });
+        /*g.append('circle')
+            .attr('cx',55)
+            .attr('cy',25)
+            .attr('r',10)
+            .attr('fill','#fff')
+            .attr('stroke-width',1)
+            .classed('polygon show', true)
+            .attr('stroke',function(d){
+                return Node.nodeSetting[d.nodeInfo.type].color
+            }).on('click', function (d) {
             d3.select(this)
-                .classed('show', true);
-        }).on('mouseout', function () {
-
-        });
+                .attr('fill', function (d) {
+                    return Node.nodeSetting[d.nodeInfo.type].color
+                });
+            d3.event.stopPropagation();
+            Node.drawLine(g, d);
+        });*/
 
         //绑定拖拽事件
         Node.canvas.selectAll('g')
             .call(Node.drag());
-        this.onCreateNode && this.onCreateNode();
+
 
     },
 

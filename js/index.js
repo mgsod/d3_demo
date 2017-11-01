@@ -35,6 +35,7 @@ var NODE_SETTING = {
 var nodeList = [];//节点集合
 
 var v_nodeList = new Vue({
+    name:'nodeList',
     el: '#NodeList',
     data: {
         nodeList: [
@@ -72,6 +73,7 @@ var v_nodeList = new Vue({
 });
 
 var v_nodeSetting = new Vue({
+    name:'nodeSetting',
     el: '#setting',
     data: {
         type: -1,
@@ -100,20 +102,17 @@ Node.init({
     canvas:d3.select('svg'),
     nodeList:nodeList,
     nodeSetting:NODE_SETTING,
+    nodeWidth:50,
     onNodeClick:function(){
-        console.log(1)
+
     },
     onDrawLine:function(){
-        console.log(2)
+
     },
-    onCreateNode:function(){
-        console.log(3)
+    onCreateNode:function(d){
+
     }
 });
-
-
-
-
 
 //初始化右键菜单插件
 context.init({preventDoubleContext: false});
@@ -156,8 +155,6 @@ context.attach('.line', [
     }
 ]);
 
-
-
 //html5拖拽结束 阻止默认行为
 function allowDrop(ev) {
     ev.preventDefault();
@@ -170,7 +167,6 @@ function allowDrop(ev) {
 function drag(ev) {
     ev.dataTransfer.setData("type", $(ev.target).attr('data-type'));
 }
-
 
 /**
  * 从菜单中拖到svg画布的函数
@@ -196,7 +192,7 @@ function drop(ev) {
 
         //在svg上创建对应节点
         Node.createNode();
-        console.log(nodeList)
+
     }
 
 }
