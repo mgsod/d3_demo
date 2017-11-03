@@ -9,9 +9,15 @@
         stroke-dashoffset: 20;
     }
 }
-rect.strokedrect {
+.strokedrect {
     stroke-dasharray: 10;
     animation: marchingants 1s forwards infinite linear;
+}
+path.strokedrect{
+    stroke-dasharray: 10;
+    animation: marchingants 1s forwards infinite linear;
+    stroke-dashoffset:60;
+    stroke:#27c24c !important;
 }
 .bgContainer {
     background: url(../img/bg.png);
