@@ -2,13 +2,12 @@
  * Created by setting on 2017/11/1 0001.
  */
 var CopyWebpackPlugin = require('copy-webpack-plugin');
-var HtmlWebpackPlugin = require('html-webpack-plugin')
-var path = require('path');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
-    entry: __dirname + "/src/js/index.js",//已多次提及的唯一入口文件
+    entry: __dirname + "/src/js/index.js",
     output: {
-        path: __dirname + "/build",//打包后的文件存放的地方
-        filename: "static/js/index.min.js"//打包后输出文件的文件名
+        path: __dirname + "/build",
+        filename: "static/js/index.min.js"
     },
     externals: {
         jquery: 'window.$'

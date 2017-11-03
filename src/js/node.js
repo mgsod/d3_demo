@@ -27,16 +27,16 @@ module.exports = {
         //event
         this.onNodeClick = options.onNodeClick;
         this.onDrawLine = options.onDrawLine;
-        this.onCreateNode = options.onCreateNode
-
+        this.onCreateNode = options.onCreateNode;
+        this.svgWidth = options.svgWidth;
+        this.svgHeight = options.svgHeight;
 
         window.onload = setSvgSize(this);
-        window.onresize = setSvgSize(this);
 
         function setSvgSize(_this) {
             return function(){
-                _this.svgWidth = $('.canvas').width();
-                _this.svgHeight = $(window).height() - 60;
+                _this.svgWidth = $(window).width()-75;
+                _this.svgHeight = $(window).height() - 55;
                 $('.bgContainer,svg').css(
                     {
                         'width': _this.svgWidth,
@@ -122,6 +122,7 @@ module.exports = {
             });
         //绑定单击事件
         g.on('click', function (d) {
+            d3.event.stopPropagation()
             if (d3.event.defaultPrevented) return; //防止拖动触发单击事件
             _this.clickNode(g, d);
 
@@ -248,6 +249,7 @@ module.exports = {
      * @param _nodeData 节点数据
      */
     clickNode: function (_node, _nodeData) {
+
         var _this = this;
         var type = _nodeData.nodeInfo.type;
         var data = _nodeData.data;

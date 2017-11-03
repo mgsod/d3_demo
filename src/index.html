@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title><%= htmlWebpackPlugin.options.title %></title>
+    <title>d3-app</title>
     <script src="static/js/jq.js"></script>
     <script src="static/js/d3.js" charset="utf-8"></script>
     <script src="static/js/context.js"></script>
@@ -12,34 +12,28 @@
     <link rel="stylesheet" href="static/css/bootstrap.css">
     <link rel="stylesheet" href="static/css/app.min.css">
     <link rel="stylesheet" href="static/css/font-awesome.min.css">
+    <link rel="stylesheet" href="static/css/animate.css">
     <link rel="stylesheet" href="static/css/index.css">
 </head>
 <body>
-<div class="container-fluid">
-    <div class="row text-center">
-        <div class="col-md-2  b-b padder-v">
-            节点列表
-        </div>
-        <div class="col-md-8 b-l b-r b-b canvas-head" style="padding:8px 0">
-            <button type="button" class="btn btn-default w-xs">保 存</button>
-        </div>
-        <div class="col-md-2 b-r b-b padder-v">属性设置</div>
-    </div>
+
+<div class="content">
     <div class="row">
-        <div class="col-md-2 padder-v" id="NodeList">
+
+        <!--<div class="col-md-1 padder-v" id="NodeList">
             <div class="node-item" v-for="item in nodeList">
                 <img  :data-type="item.type" width="50" :src="item | getImg" draggable="true"/>
                 <div>{{item.name}}</div>
             </div>
-        </div>
-        <div class="col-md-8 canvas">
+        </div>-->
+        <!--<div class="col-md-8 canvas">
             <div class="bgContainer b-b b-l b-r">
                 <svg id="canvas">
 
                 </svg>
             </div>
-        </div>
-        <div class="col-md-2 setting" id="setting" v-cloak>
+        </div>-->
+        <!--<div class="col-md-2 setting" id="setting" v-cloak>
             <div class="panel-body">
                 <div class="crawl" v-show="type == 1">
                     <div class="form-group">
@@ -96,11 +90,63 @@
                 </div>
 
             </div>
+        </div>-->
+    </div>
+    <div class="tab b-r" id="NodeList" v-cloak>
+        <img src="http://101.37.30.217:8089/ethink/image/main/bigdata_logo.png" alt="">
+        <ul>
+            <li v-for="item in tabList">
+                <a @click="tabClick(item.type)" :class="{'text-info' : select == item.type}">{{item.name}}</a>
+            </li>
+           <!-- <li><a href="#" @click="tabClick(1)"> 数据</a></li>
+            <li> <a href="#" @click="tabClick(2)">输出</a></li>
+            <li> <a href="#" @click="tabClick(3)">评估</a></li>
+            <li> <a href="#" @click="tabClick(4)">算法</a></li>-->
+        </ul>
+        <div class="node-panel panel" :class="{'_show':isShow,'_hide':!isShow}">
+            <div class="switch left " @click="toggle">
+                <i class="fa fa-angle-right" v-show="!isShow"></i>
+                <i class="fa fa-angle-left" v-show="isShow"></i>
+            </div>
+            <div>
+                <div class="panel-header text-center padder-v-sm b-b">{{name}}</div>
+                <div class="panel-body">
+                    <a v-for="item in content" class="node-item">
+                        <img  :data-type="item.type" width="50" :src="item | getImg" draggable="true" @dragstart="dragstart"/>
+                        <div>{{item.name}}</div>
+                    </a>
+                </div>
+            </div>
+
         </div>
     </div>
+    <div class="canvas pull-left">
+        <div class="panel-heading bg-white b-b text-center">
+            <button class="btn btn-default btn-rounded">保存</button>
+            <button class="btn btn-default btn-rounded">保存</button>
+            <button class="btn btn-default btn-rounded">保存</button>
+            <button class="btn btn-default btn-rounded">保存</button>
+        </div>
+        <div class="bgContainer b-b  b-r">
+            <svg id="canvas">
+
+            </svg>
+        </div>
+    </div>
+    <div id="setting" class="setting" :class="{'_show':isShow,'_hide':!isShow}">
+        <div class="switch right" @click="toggle">
+            <i class="fa fa-angle-right" v-show="isShow"></i>
+            <i class="fa fa-angle-left" v-show="!isShow"></i>
+        </div>
+        <div class="panel-heading text-center padder-v-sm b-b">属性</div>
+        <div class="panel-body">
+
+        </div>
+    </div>
+
 </div>
 
-
 </body>
+
 
 </html>

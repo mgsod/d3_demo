@@ -34,7 +34,7 @@ var NODE_SETTING = {
 
 var nodeList = [];//节点集合
 
-new Vue({
+var Vue_nodeList = new Vue({
     name:'nodeList',
     el: '#NodeList',
     data: {
@@ -58,21 +58,55 @@ new Vue({
             {
                 name: '编辑',
                 type: '5'
-            }]
+            }],
+        content:[],
+        name:'',
+        tabList:[
+            {name:'数据',type:1},
+            {name:'输出',type:2},
+            {name:'评估',type:3},
+            {name:'算法',type:4}
+        ],
+        select:1,
+        isShow:true
     },
     mounted: function () {
-        $('.node-item img').on('dragstart', function (e) {
-            drag(e.originalEvent)
-        });
+        this.changeTab()
+
     },
     filters: {
         getImg: function (item) {
             return NODE_SETTING[item.type].img
         }
+    },
+    methods:{
+        tabClick:function(type){
+            this.select = type;
+            this.isShow = true;
+            this.changeTab()
+        },
+        changeTab:function(){
+            var _this = this;
+            this.content = this.nodeList.filter(function(v){
+                if(_this.select == v.type) return v;
+            })
+            for(var i=0;i<this.tabList.length;i++){
+                if(this.tabList[i].type == _this.select){
+                    this.name = this.tabList[i].name;
+                }
+            }
+        },
+        toggle:function(){
+                this.isShow = !this.isShow
+        },
+        dragstart:function(e){
+            drag(e)
+        }
+
     }
 });
 
-var v_nodeSetting = new Vue({
+var Vue_setting = new Vue({
     name:'nodeSetting',
     el: '#setting',
     data: {
@@ -85,9 +119,14 @@ var v_nodeSetting = new Vue({
                 dataSource: '',
                 dataSourceType: ''
             }
-        }
+        },
+        isShow:false
     },
-    methods: {}
+    methods: {
+        toggle:function(){
+            this.isShow = !this.isShow
+        }
+    }
 
 });
 
@@ -97,13 +136,18 @@ $('#canvas').on('dragover', function (e) {
 $('#canvas').on('drop', function (e) {
     drop(e.originalEvent)
 });
+$('#canvas').on('click', function (e) {
+    Vue_nodeList.isShow = false;
+
+});
+
 
 Node.init({
     canvas:d3.select('svg'),
     nodeList:nodeList,
     nodeSetting:NODE_SETTING,
     nodeWidth:50,
-    vue_setting:v_nodeSetting,
+    vue_setting:Vue_setting,
     onNodeClick:function(){
 
     },
@@ -111,7 +155,7 @@ Node.init({
 
     },
     onCreateNode:function(d){
-
+        Vue_nodeList.isShow = false;
     }
 });
 
@@ -162,6 +206,7 @@ function drop(ev) {
     ev.preventDefault();
     //获取拖拽时设置的id属性
     var type = ev.dataTransfer.getData("type");
+    console.log('11',type)
     if (type) {
         var x = Node.computedPosition('x', ev.offsetX - Node.nodeOffset);
         var y = Node.computedPosition('y', ev.offsetY - Node.nodeOffset);

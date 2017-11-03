@@ -1,4 +1,6 @@
+* {margin:0; padding:0;}
 
+/*svg*/
 /**
  选中节点效果
  */
@@ -11,12 +13,12 @@ rect.strokedrect {
     stroke-dasharray: 10;
     animation: marchingants 1s forwards infinite linear;
 }
-
 .bgContainer {
     background: url(../img/bg.png);
 }
 .canvas{
-    padding:0px;
+    padding:0;
+    margin-left: 11px;
 }
 /**
  线条动画
@@ -44,7 +46,6 @@ path{
         stroke-dashoffset: 852;
     }
 }
-
 .polygon{
     transition: all .5s;
 }
@@ -54,12 +55,159 @@ path{
 .hide{
     opacity: 0;
 }
-.node-item{
-    display: inline-block;
-    margin-left: 30px;
-    text-align: center;
-    margin-bottom: 15px;
-}
+/*svg*/
+
+/*vue*/
 [v-cloak]{
     display: none;
 }
+
+.content{
+    height: 100%;
+    overflow: hidden;
+}
+
+.node-item{
+    display: inline-block;
+    margin-left: 15px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+ul>li{
+    list-style: none;
+    margin: 0;
+}
+.tab ul>li{
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+}
+.tab{
+    height: 100%;
+    position: relative;
+    /*box-shadow: 1px 0 1px #888888;*/
+
+}
+.switch{
+    position: absolute;
+    height: 100%;
+    top: 0;
+    display: flex;
+    align-items: center;
+    background-color: #E6E6E6;
+    justify-content: center;
+}
+.switch:hover{
+    background-color: #ceddef;
+}
+.switch.left{
+    width: 10px;
+    left: 300px;
+    box-shadow: 3px 0 10px;
+}
+.switch.left._show{
+    animation: switch_show .7s ;
+    animation-fill-mode:forwards;
+}
+.switch.left._hide{
+    animation: switch_hide .7s ;
+    animation-fill-mode:forwards;
+}
+
+@keyframes panel_show {
+    from {
+        left:-250px;
+    }
+    to {
+        left:51px;
+
+    }
+}
+@keyframes panel_hide {
+    from {
+        left:51px;
+    }
+    to {
+        left:-250px;
+        background-color: transparent;
+    }
+}
+
+.switch.right{
+    width: 10px;
+    left: -10px;
+    box-shadow: -3px 0 10px;
+}
+
+
+
+
+
+.tab{
+    float: left;
+    z-index: 2;
+}
+
+.node-panel{
+    z-index: -1;
+    position: absolute;
+    left: 51px;
+    width: 300px;
+    background-color: white;
+    top: 0;
+    height: 100%;
+
+}
+.node-panel._show{
+    animation: panel_show .8s ;
+    animation-fill-mode:forwards;
+}
+.node-panel._hide{
+    animation: panel_hide .8s ;
+    animation-fill-mode:forwards;
+}
+
+
+.padder-v-sm{
+    padding:16px 0;
+}
+.panel-body{
+    padding: 5px;
+}
+
+.setting{
+    float: left;
+    position: absolute;
+    width: 400px;
+    right: 0;
+    background-color: white;
+    height: 100%;
+}
+.setting._show{
+    animation: setting_panel_show .8s ;
+    animation-fill-mode:forwards;
+}
+.setting._hide{
+    animation: setting_panel_hide .8s ;
+    animation-fill-mode:forwards;
+}
+@keyframes setting_panel_show {
+    from {
+        right:-400px;
+    }
+    to {
+        right:0
+
+    }
+}
+@keyframes setting_panel_hide {
+    from {
+        right:0
+    }
+    to {
+        right:-400px;
+        background-color: transparent;
+    }
+}
+
