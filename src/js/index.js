@@ -153,13 +153,14 @@ Node.init({
         Vue_setting.isShow = true;
     },
     onDrawLine:function(){
-
+        Node.saveNodeInfo();
     },
     onCreateNode:function(d){
-        Vue_nodeList.isShow = false;
         Vue_setting.isShow = true;
+        Node.saveNodeInfo();
     }
 });
+nodeList = Node.nodeList
 
 
 //初始化右键菜单插件

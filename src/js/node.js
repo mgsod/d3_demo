@@ -61,7 +61,7 @@ module.exports = {
             "showMethod": "fadeIn",
             "hideMethod": "slideUp"
         };
-
+        this.reappear();
         this.canvas.append('svg:defs').append('svg:marker')
             .attr('id', 'end-arrow')
             .attr('viewBox', '0 -5 10 10')
@@ -530,5 +530,24 @@ module.exports = {
             return false;
         }
         return true;
+    },
+
+    /**
+     * 缓存nodeList
+     */
+    saveNodeInfo:function(){
+        sessionStorage.nodeList = JSON.stringify(this.nodeList);
+    },
+    /**
+     * 节点重现
+     * @returns {boolean}
+     */
+    reappear:function(){
+        var nodeList = sessionStorage.nodeList;
+        if(!nodeList) return false;
+        this.nodeList = JSON.parse(nodeList);
+        this.createNode();
+        console.log(this.nodeList)
+
     }
 };
