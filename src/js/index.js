@@ -138,6 +138,7 @@ $('#canvas').on('drop', function (e) {
 });
 $('#canvas').on('click', function (e) {
     Vue_nodeList.isShow = false;
+    Vue_setting.isShow = false;
 
 });
 
@@ -149,13 +150,14 @@ Node.init({
     nodeWidth:50,
     vue_setting:Vue_setting,
     onNodeClick:function(){
-
+        Vue_setting.isShow = true;
     },
     onDrawLine:function(){
 
     },
     onCreateNode:function(d){
         Vue_nodeList.isShow = false;
+        Vue_setting.isShow = true;
     }
 });
 
