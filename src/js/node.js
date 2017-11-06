@@ -24,6 +24,8 @@ module.exports = {
         this.pathColor = options.pathColor || '#565656'; //线条颜色 默认 '#565656'
         this.allowPath = false; //拖拽节点时是否允许线条跟随
 
+        this.isEdit = false;
+
         //event
         this.onNodeClick = options.onNodeClick;
         this.onDrawLine = options.onDrawLine;
@@ -92,7 +94,7 @@ module.exports = {
             .attr('id', function (d) {
                 //设置节点名称
                 var name = d.nodeInfo.name;
-                _this.onCreateNode(d);
+                this.isEdit || _this.onCreateNode && _this.onCreateNode(d);
                 if (!name) {
                     //如果是新建则取时间戳作为唯一名
                     var time = new Date().getTime();
@@ -101,7 +103,7 @@ module.exports = {
                 } else {
                     //如果更新节点则以之前名为命名
                     d.nodeInfo.name = name;
-                    return 'node_' + name;
+                    return  name;
                 }
 
             });
@@ -192,8 +194,7 @@ module.exports = {
 
     /**
      * 拖拽函数 [d3]
-     * @param _nodeData
-     * @param _nodeIndex
+     * @param _this
      * @returns {boolean}
      */
     dragMove: function (_this) {
@@ -292,26 +293,30 @@ module.exports = {
      */
     drawLine: function (_node, _nodeData) {
         var _this = this;
+        if(_this.isEdit) _this.isSelectStart = true;
         if (!_this.isSelectStart) {
             _this.selectedNodeData = _nodeData;
             _this.selectedNode = _node;
             _this.isSelectStart = true;
         } else {
-            if (_node === _this.selectedNode) {
-                alert['warning']("不能选择当前节作为下级节点");
-                _this.restLine(_node);
-                return false
+            if(!_this.isEdit){
+                if (_this.selectedNodeData.nodeInfo.name === _nodeData.nodeInfo.name) {
+                    alert['warning']("不能选择当前节作为下级节点");
+                    _this.restLine(_node);
+                    return false
+                }
+                if (_nodeData.nodeInfo.from && _nodeData.nodeInfo.from.indexOf(_this.selectedNodeData.nodeInfo.name) > -1) {
+                    alert['warning']("此节点已经是当前节点的下级");
+                    _this.restLine(_node);
+                    return false;
+                }
+                if (_nodeData.nodeInfo.to && _nodeData.nodeInfo.to.indexOf(_this.selectedNodeData.nodeInfo.name) > -1) {
+                    alert['warning']("此节点是当前节点的上级,不可作为下级节点");
+                    _this.restLine(_node);
+                    return false;
+                }
             }
-            if (_nodeData.nodeInfo.from && _nodeData.nodeInfo.from.indexOf(_this.selectedNodeData.nodeInfo.name) > -1) {
-                alert['warning']("此节点已经是当前节点的下级");
-                _this.restLine(_node);
-                return false;
-            }
-            if (_nodeData.nodeInfo.to && _nodeData.nodeInfo.to.indexOf(_this.selectedNodeData.nodeInfo.name) > -1) {
-                alert['warning']("此节点是当前节点的上级,不可作为下级节点");
-                _this.restLine(_node);
-                return false;
-            }
+
             _this.canvas.append('path')
                 .attr('d', function () {
                     return 'M' + (_this.selectedNodeData.nodeInfo.x + _this.nodeOffset) + ' ' + (_this.selectedNodeData.nodeInfo.y + _this.nodeOffset) + ' L' + (_nodeData.nodeInfo.x + _this.nodeOffset) + ' ' + (_nodeData.nodeInfo.y + _this.nodeOffset)
@@ -331,15 +336,19 @@ module.exports = {
                 .on('mouseout', function () {
                     d3.select(this).style({stroke: _this.pathColor, 'stroke-width': 1.5})
                 });
-            _this.selectedNodeData.nodeInfo.to = _this.selectedNodeData.nodeInfo.to || [];
-            _this.selectedNodeData.nodeInfo.to.push(_nodeData.nodeInfo.name);
 
-            _nodeData.nodeInfo.from = _nodeData.nodeInfo.from || [];
-            _nodeData.nodeInfo.from.push(_this.selectedNodeData.nodeInfo.name);
+            if(!_this.isEdit){
+                _this.selectedNodeData.nodeInfo.to = _this.selectedNodeData.nodeInfo.to || [];
+                _this.selectedNodeData.nodeInfo.to.push(_nodeData.nodeInfo.name);
 
-            this.onDrawLine && this.onDrawLine();
+                _nodeData.nodeInfo.from = _nodeData.nodeInfo.from || [];
+                _nodeData.nodeInfo.from.push(_this.selectedNodeData.nodeInfo.name);
+            }
 
-            _this.restLine(_node)
+
+            this.isEdit ||  this.onDrawLine &&  this.onDrawLine();
+            _this.restLine(_node);
+            _this.isEdit = false;
         }
     },
 
@@ -547,7 +556,27 @@ module.exports = {
         if(!nodeList) return false;
         this.nodeList = JSON.parse(nodeList);
         this.createNode();
-        console.log(this.nodeList)
+
+        var nodeListLen = this.nodeList.length;
+
+        for(var i =0;i<nodeListLen;i++){
+            var pathTo = this.nodeList[i].nodeInfo.to;
+            if(!pathTo){
+                continue;
+            }
+            var selectNode = d3.select('#'+this.nodeList[i].name);
+            var selectNodeData = this.nodeList[i];
+            this.selectedNode = selectNode;
+            this.selectedNodeData = selectNodeData;
+
+            for(var j=0,length = pathTo.length;j<length;j++){
+                var _node = d3.select('#'+pathTo[j]);
+                var _nodeData = this.nodeList[this.getNodeIndexByName(this.nodeList,pathTo[j])];
+                this.isEdit = true;
+                this.drawLine(_node,_nodeData);
+            }
+        }
+
 
     }
 };

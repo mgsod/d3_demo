@@ -103,6 +103,7 @@ ul>li{
     align-items: center;
     background-color: #E6E6E6;
     justify-content: center;
+    cursor: pointer;
 }
 .switch:hover{
     background-color: #ceddef;
