@@ -44,6 +44,10 @@ var Vue_nodeList = new Vue({
                 type: '1'
             },
             {
+                name: '数据抓取111',
+                type: '1'
+            },
+            {
                 name: '读取',
                 type: '2'
             },
@@ -53,6 +57,26 @@ var Vue_nodeList = new Vue({
             },
             {
                 name: '输出',
+                type: '4'
+            },
+            {
+                name: '输出5',
+                type: '4'
+            },
+            {
+                name: '输出4',
+                type: '4'
+            },
+            {
+                name: '输出3',
+                type: '4'
+            },
+            {
+                name: '输出2',
+                type: '4'
+            },
+            {
+                name: '输出1',
                 type: '4'
             },
             {
@@ -101,6 +125,10 @@ var Vue_nodeList = new Vue({
         },
         dragstart:function(e){
             drag(e)
+        },
+        line:function(){
+            Node.isLine = true;
+            Node.restDasharray();
         }
 
     }

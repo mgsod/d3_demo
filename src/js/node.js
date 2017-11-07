@@ -25,6 +25,8 @@ module.exports = {
         this.allowPath = false; //拖拽节点时是否允许线条跟随
 
         this.isEdit = false;
+        this.isLine = false;
+
 
         //event
         this.onNodeClick = options.onNodeClick;
@@ -64,6 +66,7 @@ module.exports = {
             "showMethod": "fadeIn",
             "hideMethod": "slideUp"
         };
+
         this.reappear();
         this.canvas.append('svg:defs').append('svg:marker')
             .attr('id', 'end-arrow')
@@ -114,7 +117,9 @@ module.exports = {
             .attr('width', _this.nodeWidth)
             .attr('height', _this.nodeHeight)
             .style({
-                fill: 'none'
+                fill: 'none',
+                stroke:'black',
+                'stroke-width':1
             });
         //图片
         g.append('image')
@@ -130,8 +135,22 @@ module.exports = {
             _this.clickNode(g, d);
 
         });
+           /* var cd = [[25,-4],[54,25],[25,54],[-4,25]]
+            g.selectAll('circle')
+                .data(cd)
+                .enter()
+                .append('circle')
+                .attr('r',4)
+                .attr('cx',function(d){
+                   return d[0]
+                }).attr('cy',function(d){
+                    return d[1]
+                })
+*/
 
-        g.append('polygon')
+
+
+        /*g.append('polygon')
             .attr('points', '53,15 53,35 65,25')
             .attr('fill', '#fff')
             .attr('stroke', function (d) {
@@ -148,7 +167,7 @@ module.exports = {
                     });
                 d3.event.stopPropagation();
                 _this.drawLine(g, d);
-            });
+            });*/
 
         //绑定拖拽事件
         _this.canvas.selectAll('g')
@@ -235,39 +254,65 @@ module.exports = {
      * @param _nodeData 节点数据
      */
     clickNode: function (_node, _nodeData) {
-
         var _this = this;
-        var type = _nodeData.nodeInfo.type;
-        var data = _nodeData.data;
-        var name = _nodeData.nodeInfo.name;
-        _this.vue_setting.type = type;
-        _this.vue_setting.data[type] = data;
-        _this.vue_setting.name = name;
-        _this.canvas.selectAll('g')
-            .filter(function (data) {
-                if (data.nodeInfo.name === _nodeData.nodeInfo.name) {
-                    var _this = d3.select(this);
-                    _this.style({
-                        fill: 'none',
-                        stroke: 'black',
-                        'stroke-width': 1
-                    }).select('rect')
-                        .attr('stroke-dasharray', 8)
-                        .attr('class', 'strokedrect');
+        if(!_this.isLine){
+            var type = _nodeData.nodeInfo.type;
+            var data = _nodeData.data;
+            var name = _nodeData.nodeInfo.name;
+            _this.vue_setting.type = type;
+            _this.vue_setting.data[type] = data;
+            _this.vue_setting.name = name;
+            _this.canvas.selectAll('g')
+                .filter(function (data) {
+                    if (data.nodeInfo.name === _nodeData.nodeInfo.name) {
+                        var _this = d3.select(this);
+                        _this.select('rect')
+                            .style({
+                                fill: 'none',
+                                stroke: 'black',
+                                'stroke-width': 1
+                            })
+                            .attr('stroke-dasharray', 8)
+                            .attr('class', 'strokedrect');
 
-                } else {
-                    d3.select(this)
-                        .style({
+                    } else {
+                        d3.select(this)
+                            .select('rect')
+                            .attr('class','')
+                            .attr('stroke-dasharray', '')
+
+                    }
+                });
+
+            this.onNodeClick && this.onNodeClick();
+        }else{
+            _this.canvas.selectAll('g')
+                .filter(function (data) {
+                    if (data.nodeInfo.name === _nodeData.nodeInfo.name) {
+                        var _this = d3.select(this);
+                        _this.select('rect')
+                            .style({
                             fill: 'none',
-                            stroke: 'none',
-                            'stroke-width': 0
+                            stroke: '#ffad33',
+                            'stroke-width': 2
                         })
-                        .select('polygon')
-                        .classed('show', false)
-                }
-            });
+                            .attr('stroke-dasharray', 8)
+                            .attr('class', 'strokedrect');
 
-        this.onNodeClick && this.onNodeClick();
+                    }
+                });
+            _this.drawLine(_node,_nodeData);
+
+        }
+
+    },
+
+    restDasharray:function(){
+        alert['success']('进入连线模式,单击节点可进行连线')
+        d3.selectAll('g')
+            .select('rect')
+            .attr('class','')
+            .attr('stroke-dasharray', '')
     },
 
     /**
@@ -287,17 +332,17 @@ module.exports = {
             if (!_this.isEdit) {
                 if (_this.selectedNodeData.nodeInfo.name === _nodeData.nodeInfo.name) {
                     alert['warning']("不能选择当前节作为下级节点");
-                    _this.restLine(_node);
+                    _this.restLine();
                     return false
                 }
                 if (_nodeData.nodeInfo.from && _nodeData.nodeInfo.from.indexOf(_this.selectedNodeData.nodeInfo.name) > -1) {
                     alert['warning']("此节点已经是当前节点的下级");
-                    _this.restLine(_node);
+                    _this.restLine();
                     return false;
                 }
                 if (_nodeData.nodeInfo.to && _nodeData.nodeInfo.to.indexOf(_this.selectedNodeData.nodeInfo.name) > -1) {
                     alert['warning']("此节点是当前节点的上级,不可作为下级节点");
-                    _this.restLine(_node);
+                    _this.restLine();
                     return false;
                 }
             }
@@ -329,11 +374,16 @@ module.exports = {
 
                 _nodeData.nodeInfo.from = _nodeData.nodeInfo.from || [];
                 _nodeData.nodeInfo.from.push(_this.selectedNodeData.nodeInfo.name);
+                _this.restLine();
+
             }
 
 
             this.isEdit || this.onDrawLine && this.onDrawLine();
             _this.isEdit = false;
+            _this.isLine = false;
+
+
         }
     },
 
@@ -400,14 +450,17 @@ module.exports = {
      * 重置线条样式 [连线完成或者连线出错后重置线条]
      * @param _node 当前选中的节点
      */
-    restLine: function (_node) {
+    restLine: function () {
         var _this = this;
-        setTimeout(function () {
-            _this.selectedNode.select('polygon')
-                .attr('fill', '#fff');
-            _node.select('polygon')
-                .attr('fill', '#fff')
-        }, 1100);
+        d3.selectAll('g')
+            .select('rect')
+            .style({
+                fill: 'none',
+                stroke: 'black',
+                'stroke-width': 1
+            })
+            .attr('class','')
+            .attr('stroke-dasharray', '')
         _this.selectedNodeData = null;
         _this.isSelectStart = false;
     },
@@ -543,7 +596,6 @@ module.exports = {
         y1 = parseInt(y1);
         y2 = parseInt(y2);
         var position = this.getPosition(x1, y1, x2, y2);
-        
         switch (position) {
             case 'left':
                 var _x1 = x1;
@@ -592,7 +644,6 @@ module.exports = {
         if (!nodeList) return false;
         this.nodeList = JSON.parse(nodeList);
         this.createNode();
-
         var nodeListLen = this.nodeList.length;
 
         for (var i = 0; i < nodeListLen; i++) {
@@ -604,13 +655,13 @@ module.exports = {
             var selectNodeData = this.nodeList[i];
             this.selectedNode = selectNode;
             this.selectedNodeData = selectNodeData;
-
             for (var j = 0, length = pathTo.length; j < length; j++) {
                 var _node = d3.select('#' + pathTo[j]);
                 var _nodeData = this.nodeList[this.getNodeIndexByName(this.nodeList, pathTo[j])];
                 this.isEdit = true;
                 this.drawLine(_node, _nodeData);
             }
+            this.restLine();
         }
 
 
