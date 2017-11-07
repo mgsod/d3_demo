@@ -36,8 +36,8 @@ module.exports = {
         window.onload = setSvgSize(this);
 
         function setSvgSize(_this) {
-            return function(){
-                _this.svgWidth = $(window).width()-75;
+            return function () {
+                _this.svgWidth = $(window).width() - 75;
                 _this.svgHeight = $(window).height() - 55;
                 $('.bgContainer,svg').css(
                     {
@@ -48,6 +48,7 @@ module.exports = {
 
 
         }
+
         alert.options = {
             "closeButton": true,
             "debug": false,
@@ -103,7 +104,7 @@ module.exports = {
                 } else {
                     //如果更新节点则以之前名为命名
                     d.nodeInfo.name = name;
-                    return  name;
+                    return name;
                 }
 
             });
@@ -135,7 +136,7 @@ module.exports = {
             .attr('fill', '#fff')
             .attr('stroke', function (d) {
                 //默认选中当前节点
-                _this.clickNode(g,d);
+                _this.clickNode(g, d);
                 return _this.nodeSetting[d.nodeInfo.type].color
             })
             .attr('stroke-width', 1)
@@ -148,23 +149,6 @@ module.exports = {
                 d3.event.stopPropagation();
                 _this.drawLine(g, d);
             });
-        /*g.append('circle')
-            .attr('cx',55)
-            .attr('cy',25)
-            .attr('r',10)
-            .attr('fill','#fff')
-            .attr('stroke-width',1)
-            .classed('polygon show', true)
-            .attr('stroke',function(d){
-                return Node.nodeSetting[d.nodeInfo.type].color
-            }).on('click', function (d) {
-            d3.select(this)
-                .attr('fill', function (d) {
-                    return Node.nodeSetting[d.nodeInfo.type].color
-                });
-            d3.event.stopPropagation();
-            Node.drawLine(g, d);
-        });*/
 
         //绑定拖拽事件
         _this.canvas.selectAll('g')
@@ -198,7 +182,7 @@ module.exports = {
      * @returns {boolean}
      */
     dragMove: function (_this) {
-        return function(_nodeData,_nodeIndex){
+        return function (_nodeData, _nodeIndex) {
             //将进行边缘碰撞计算后的值赋值给节点对象的x,y.
             _nodeData.nodeInfo.x = _this.computedPosition('x', d3.event.x);
             _nodeData.nodeInfo.y = _this.computedPosition('y', d3.event.y);
@@ -215,19 +199,20 @@ module.exports = {
                 var fromPath = _this.canvas.selectAll('[from=' + name + ']');
                 if (toPath.size() > 0) {
                     toPath.filter(function () {
-                        var toD = d3.select(this).attr('d');
-                        //正则获取并替换线条的终点               //加上偏移量 以让箭头指向圆心
-                        toD = toD.replace(/L(\d+) (\d)+/, 'L' + (_nodeData.nodeInfo.x + _this.nodeOffset) + ' ' + (_nodeData.nodeInfo.y + _this.nodeOffset));
+                        var _fromNode = _this.nodeList[_this.getNodeIndexByName(_this.nodeList,d3.select(this).attr('from'))];
+                        var points = _this.getPoints(_fromNode.nodeInfo.x,_fromNode.nodeInfo.y,_nodeData.nodeInfo.x,_nodeData.nodeInfo.y);
+                        var  toD = 'M'+(points[0][0])+' '+(points[0][1])+' L'+(points[1][0])+' '+(points[1][1])+'';
+                        console.log(toD)
                         d3.select(this).attr('d', toD);
                     });
                 }
 
                 if (fromPath.size() > 0) {
                     fromPath.filter(function () {
-                        var fromD = d3.select(this).attr('d');
-                        //正则获取并替换线条的起点                   //加上偏移量 以让箭头指向圆心
-                        fromD = fromD.replace(/M(\d+) (\d)+/, 'M' + (_nodeData.nodeInfo.x + _this.nodeOffset) + ' ' + (_nodeData.nodeInfo.y + _this.nodeOffset));
-                        d3.select(this).attr('d', fromD)
+                        var _toNode = _this.nodeList[_this.getNodeIndexByName(_this.nodeList,d3.select(this).attr('to'))];
+                        var points = _this.getPoints(_toNode.nodeInfo.x,_toNode.nodeInfo.y,_nodeData.nodeInfo.x,_nodeData.nodeInfo.y);
+                        var  fromD = 'M'+(points[1][0])+' '+(points[1][1])+' L'+(points[0][0])+' '+(points[0][1])+'';
+                        d3.select(this).attr('d', fromD);
                     })
                 }
             }
@@ -293,13 +278,13 @@ module.exports = {
      */
     drawLine: function (_node, _nodeData) {
         var _this = this;
-        if(_this.isEdit) _this.isSelectStart = true;
+        if (_this.isEdit) _this.isSelectStart = true;
         if (!_this.isSelectStart) {
             _this.selectedNodeData = _nodeData;
             _this.selectedNode = _node;
             _this.isSelectStart = true;
         } else {
-            if(!_this.isEdit){
+            if (!_this.isEdit) {
                 if (_this.selectedNodeData.nodeInfo.name === _nodeData.nodeInfo.name) {
                     alert['warning']("不能选择当前节作为下级节点");
                     _this.restLine(_node);
@@ -317,9 +302,10 @@ module.exports = {
                 }
             }
 
+            var points = _this.getPoints(_this.selectedNodeData.nodeInfo.x,_this.selectedNodeData.nodeInfo.y, _nodeData.nodeInfo.x,_nodeData.nodeInfo.y);
             _this.canvas.append('path')
                 .attr('d', function () {
-                    return 'M' + (_this.selectedNodeData.nodeInfo.x + _this.nodeOffset) + ' ' + (_this.selectedNodeData.nodeInfo.y + _this.nodeOffset) + ' L' + (_nodeData.nodeInfo.x + _this.nodeOffset) + ' ' + (_nodeData.nodeInfo.y + _this.nodeOffset)
+                    return 'M' + (points[0][0]) + ' ' + (points[0][1]) + ' L' + (points[1][0]) + ' ' + (points[1][1])
                 })
                 .attr("marker-end", "url(#end-arrow)")
                 .attr('from', _this.selectedNodeData.nodeInfo.name)
@@ -337,7 +323,7 @@ module.exports = {
                     d3.select(this).style({stroke: _this.pathColor, 'stroke-width': 1.5})
                 });
 
-            if(!_this.isEdit){
+            if (!_this.isEdit) {
                 _this.selectedNodeData.nodeInfo.to = _this.selectedNodeData.nodeInfo.to || [];
                 _this.selectedNodeData.nodeInfo.to.push(_nodeData.nodeInfo.name);
 
@@ -346,8 +332,7 @@ module.exports = {
             }
 
 
-            this.isEdit ||  this.onDrawLine &&  this.onDrawLine();
-            _this.restLine(_node);
+            this.isEdit || this.onDrawLine && this.onDrawLine();
             _this.isEdit = false;
         }
     },
@@ -541,39 +526,90 @@ module.exports = {
         return true;
     },
 
+    getPosition: function (x1, y1, x2, y2) {
+        var _x = x2 - x1;
+        var _y = y2 - y1;
+        var xOy = Math.abs(_x) > Math.abs(_y) ? 'x' : 'y';
+        if (xOy === 'x') {
+            return _x > 0 ? 'right' : 'left'
+        } else {
+            return _y > 0 ? 'bottom' : 'top'
+        }
+    },
+
+    getPoints: function (x1,y1,x2,y2) {
+        x1 = parseInt(x1);
+        x2 = parseInt(x2);
+        y1 = parseInt(y1);
+        y2 = parseInt(y2);
+        var position = this.getPosition(x1, y1, x2, y2);
+        
+        switch (position) {
+            case 'left':
+                var _x1 = x1;
+                var _y1 = y1 + this.nodeOffset;
+                var _x2 = x2 + this.nodeWidth;
+                var _y2 = y2 + this.nodeOffset;
+                return [[_x1, _y1], [_x2, _y2]];
+                break;
+            case 'right':
+                var _x1 = x1 + this.nodeWidth;
+                var _y1 = y1 + this.nodeOffset;
+                var _x2 = x2;
+                var _y2 = y2 + this.nodeOffset;
+                return [[_x1, _y1], [_x2, _y2]];
+                break;
+            case 'top':
+                var _x1 = x1 + this.nodeOffset;
+                var _y1 = y1;
+                var _x2 = x2 + this.nodeOffset;
+                var _y2 = y2 + this.nodeWidth;
+                return [[_x1, _y1], [_x2, _y2]];
+                break;
+            case 'bottom':
+                var _x1 = x1 + this.nodeOffset;
+                var _y1 = y1 + this.nodeWidth;
+                var _x2 = x2 + this.nodeOffset;
+                var _y2 = y2;
+                return [[_x1, _y1], [_x2, _y2]];
+                break;
+        }
+
+    },
+
     /**
      * 缓存nodeList
      */
-    saveNodeInfo:function(){
+    saveNodeInfo: function () {
         sessionStorage.nodeList = JSON.stringify(this.nodeList);
     },
     /**
      * 节点重现
      * @returns {boolean}
      */
-    reappear:function(){
+    reappear: function () {
         var nodeList = sessionStorage.nodeList;
-        if(!nodeList) return false;
+        if (!nodeList) return false;
         this.nodeList = JSON.parse(nodeList);
         this.createNode();
 
         var nodeListLen = this.nodeList.length;
 
-        for(var i =0;i<nodeListLen;i++){
+        for (var i = 0; i < nodeListLen; i++) {
             var pathTo = this.nodeList[i].nodeInfo.to;
-            if(!pathTo){
+            if (!pathTo) {
                 continue;
             }
-            var selectNode = d3.select('#'+this.nodeList[i].name);
+            var selectNode = d3.select('#' + this.nodeList[i].name);
             var selectNodeData = this.nodeList[i];
             this.selectedNode = selectNode;
             this.selectedNodeData = selectNodeData;
 
-            for(var j=0,length = pathTo.length;j<length;j++){
-                var _node = d3.select('#'+pathTo[j]);
-                var _nodeData = this.nodeList[this.getNodeIndexByName(this.nodeList,pathTo[j])];
+            for (var j = 0, length = pathTo.length; j < length; j++) {
+                var _node = d3.select('#' + pathTo[j]);
+                var _nodeData = this.nodeList[this.getNodeIndexByName(this.nodeList, pathTo[j])];
                 this.isEdit = true;
-                this.drawLine(_node,_nodeData);
+                this.drawLine(_node, _nodeData);
             }
         }
 
