@@ -111,8 +111,8 @@
             <div>
                 <div class="panel-header text-center padder-v-sm b-b">{{name}}</div>
                 <div class="panel-body">
-                    <a v-for="item in content" class="node-item">
-                        <img  :data-type="item.type" width="50" :src="item | getImg" draggable="true" @dragstart="dragstart"/>
+                    <a v-for="(item,index) in content" class="node-item">
+                        <img  :data-index='index'  :data-type="item.type" width="50"  :src="item | getImg" draggable="true" @dragstart="dragstart"/>
                         <div>{{item.name}}</div>
                     </a>
                 </div>

@@ -36,6 +36,9 @@ path{
     animation-fill-mode:forwards;
     -webkit-animation-fill-mode:both ;
 }
+text{
+    text-anchor: middle;
+}
 @-webkit-keyframes polanim {
     0% {
         stroke-dasharray: 0, 1500;

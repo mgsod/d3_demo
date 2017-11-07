@@ -67,7 +67,7 @@ module.exports = {
             "hideMethod": "slideUp"
         };
 
-        this.reappear();
+        //this.reappear();
         this.canvas.append('svg:defs').append('svg:marker')
             .attr('id', 'end-arrow')
             .attr('viewBox', '0 -5 10 10')
@@ -128,6 +128,11 @@ module.exports = {
             .attr('xlink:href', function (d) {
                 return _this.nodeSetting[d.nodeInfo.type].img
             });
+        g.append('text').text(function(d){
+              return d.data.name.length > 4 ? d.data.name.substring(0,3)+'...' : d.data.name
+        })
+            .attr('y',_this.nodeHeight+15)
+            .attr('x',_this.nodeWidth/2)
         //绑定单击事件
         g.on('click', function (d) {
             d3.event.stopPropagation()
@@ -135,39 +140,10 @@ module.exports = {
             _this.clickNode(g, d);
 
         });
-           /* var cd = [[25,-4],[54,25],[25,54],[-4,25]]
-            g.selectAll('circle')
-                .data(cd)
-                .enter()
-                .append('circle')
-                .attr('r',4)
-                .attr('cx',function(d){
-                   return d[0]
-                }).attr('cy',function(d){
-                    return d[1]
-                })
-*/
 
 
 
-        /*g.append('polygon')
-            .attr('points', '53,15 53,35 65,25')
-            .attr('fill', '#fff')
-            .attr('stroke', function (d) {
-                //默认选中当前节点
-                _this.clickNode(g, d);
-                return _this.nodeSetting[d.nodeInfo.type].color
-            })
-            .attr('stroke-width', 1)
-            .classed('polygon show', true)
-            .on('click', function (d) {
-                d3.select(this)
-                    .attr('fill', function (d) {
-                        return _this.nodeSetting[d.nodeInfo.type].color
-                    });
-                d3.event.stopPropagation();
-                _this.drawLine(g, d);
-            });*/
+
 
         //绑定拖拽事件
         _this.canvas.selectAll('g')
@@ -221,7 +197,7 @@ module.exports = {
                         var _fromNode = _this.nodeList[_this.getNodeIndexByName(_this.nodeList,d3.select(this).attr('from'))];
                         var points = _this.getPoints(_fromNode.nodeInfo.x,_fromNode.nodeInfo.y,_nodeData.nodeInfo.x,_nodeData.nodeInfo.y);
                         var  toD = 'M'+(points[0][0])+' '+(points[0][1])+' L'+(points[1][0])+' '+(points[1][1])+'';
-                        console.log(toD)
+
                         d3.select(this).attr('d', toD);
                     });
                 }
