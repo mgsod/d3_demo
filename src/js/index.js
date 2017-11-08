@@ -55,7 +55,6 @@ var NODE_SETTING = {
 };
 
 var nodeList = [];//节点集合
-
 var Vue_nodeList = new Vue({
     name: 'nodeList',
     el: '#NodeList',

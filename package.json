@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "webpack --watch &",
     "build": "webpack -p ",
-    "proxy": "node index.js &",
+    "proxy": "node index.js",
     "start": "concurrently \"npm run dev\" \"npm run proxy\"",
     "test": "npm run dev && npm run proxy"
   },

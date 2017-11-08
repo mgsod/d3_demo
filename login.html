@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="src/static/js/jq.js"></script>
+</head>
+<body>
+
+<input type="text" id="name">
+<br>
+<input type="text" id="pwd">
+<input type="button" value="login" id="login">
+</body>
+<script>
+    $('#login').click(function () {
+        $.post('/login.json',{
+            userName:$('#name').val(),
+            passwd:$('#pwd').val(),
+            remember:true
+        })
+    })
+
+</script>
+</html>

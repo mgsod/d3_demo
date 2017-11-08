@@ -555,6 +555,14 @@ module.exports = {
         return true;
     },
 
+    /**
+     * 获取另一节点位于当前节点的方向
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @returns {string}
+     */
     getPosition: function (x1, y1, x2, y2) {
         var _x = x2 - x1;
         var _y = y2 - y1;
@@ -566,6 +574,14 @@ module.exports = {
         }
     },
 
+    /**
+     * 根据方向计算线条起点和终点
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @returns {[null,null]}
+     */
     getPoints: function (x1,y1,x2,y2) {
         x1 = parseInt(x1);
         x2 = parseInt(x2);
