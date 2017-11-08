@@ -4,8 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack --watch",
-    "build": "webpack -p"
+    "dev": "webpack --watch &",
+    "build": "webpack -p ",
+    "proxy": "node index.js &",
+    "start": "concurrently \"npm run dev\" \"npm run proxy\"",
+    "test": "npm run dev && npm run proxy"
   },
   "repository": {
     "type": "git",
@@ -21,5 +24,8 @@
     "copy-webpack-plugin": "^4.2.0",
     "html-webpack-plugin": "^2.30.1",
     "webpack": "^2.6.1"
+  },
+  "dependencies": {
+    "concurrently": "^3.5.0"
   }
 }

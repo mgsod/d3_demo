@@ -170,11 +170,26 @@ var Vue_setting = new Vue({
                 dataSourceType: ''
             }
         },
-        isShow: false
+        isShow: false,
+        dialogFormVisible: false,
+        form: {
+            name: '',
+            region: '',
+            date1: '',
+            date2: '',
+            delivery: false,
+            type: [],
+            resource: '',
+            desc: ''
+        }
     },
     methods: {
         toggle: function () {
-            this.isShow = !this.isShow
+            this.isShow = !this.isShow;
+            this.$message({
+                message: '恭喜你，这是一条成功消息',
+                type: 'success'
+            });
         }
     }
 
@@ -207,6 +222,7 @@ Node.init({
     },
     onCreateNode: function (d) {
         Vue_setting.isShow = true;
+        console.log(nodeList)
         Node.saveNodeInfo();
     }
 });

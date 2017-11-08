@@ -66,8 +66,8 @@ module.exports = {
             "showMethod": "fadeIn",
             "hideMethod": "slideUp"
         };
-
-        //this.reappear();
+        //缓存
+        this.reappear();
         this.canvas.append('svg:defs').append('svg:marker')
             .attr('id', 'end-arrow')
             .attr('viewBox', '0 -5 10 10')

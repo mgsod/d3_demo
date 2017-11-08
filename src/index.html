@@ -3,10 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>d3-app</title>
-    <script src="static/js/jq.js"></script>
-    <script src="static/js/d3.js" charset="utf-8"></script>
-    <script src="static/js/context.js"></script>
-    <script src="static/js/vue.js"></script>
     <link rel="stylesheet" href="static/css/context.standalone.css">
     <link href="https://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
     <link rel="stylesheet" href="static/css/bootstrap.css">
@@ -14,6 +10,7 @@
     <link rel="stylesheet" href="static/css/font-awesome.min.css">
     <link rel="stylesheet" href="static/css/animate.css">
     <link rel="stylesheet" href="static/css/index.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 </head>
 <body>
 
@@ -144,8 +141,27 @@
             <i class="fa fa-angle-right" v-show="isShow"></i>
             <i class="fa fa-angle-left" v-show="!isShow"></i>
         </div>
-        <div class="panel-heading text-center padder-v-sm b-b">属性</div>
+        <div class="panel-heading text-center padder-v-sm b-b">属sdsf性</div>
         <div class="panel-body">
+            <el-button type="text" @click="dialogFormVisible = true">打开嵌套表单的 Dialog</el-button>
+
+            <el-dialog title="收货地址" :visible.sync="dialogFormVisible" width="500px">
+                <el-form :model="form">
+                    <el-form-item label="活动名称" >
+                        <el-input v-model="form.name" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="活动区域" >
+                        <el-select v-model="form.region" placeholder="请选择活动区域">
+                            <el-option label="区域一" value="shanghai"></el-option>
+                            <el-option label="区域二" value="beijing"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="dialogFormVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+                </div>
+            </el-dialog>
             <form class="bs-example form-horizontal">
                 <div class="form-group">
                     <label class="col-lg-2 control-label">Email</label>
@@ -188,7 +204,11 @@
     </div>
 
 </div>
-
+<script src="static/js/jq.js"></script>
+<script src="static/js/d3.js" charset="utf-8"></script>
+<script src="static/js/context.js"></script>
+<script src="static/js/vue.js"></script>
+<script src="static/js/element.js"></script>
 </body>
 
 
