@@ -8,9 +8,8 @@
     <link rel="stylesheet" href="static/css/bootstrap.css">
     <link rel="stylesheet" href="static/css/app.min.css">
     <link rel="stylesheet" href="static/css/font-awesome.min.css">
-    <link rel="stylesheet" href="static/css/animate.css">
     <link rel="stylesheet" href="static/css/index.css">
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="static/css/element.css">
 </head>
 <body>
 
@@ -139,64 +138,21 @@
             <i class="fa fa-angle-left" v-show="!isShow"></i>
         </div>
         <div class="panel-heading text-center padder-v-sm b-b">属sdsf性</div>
-        <div class="panel-body">
-            <el-button type="text" @click="dialogFormVisible = true">打开嵌套表单的 Dialog</el-button>
-
-            <el-dialog title="收货地址" :visible.sync="dialogFormVisible" width="500px">
-                <el-form :model="form">
-                    <el-form-item label="活动名称" >
-                        <el-input v-model="form.name" auto-complete="off"></el-input>
+        <div class="panel-body ">
+            <div v-show="type == 1">
+                <el-form label-position="right" label-width="80px" size="small" class="text-center">
+                    <el-form-item label="名称">
+                        <el-input v-model="data[1].name"></el-input>
                     </el-form-item>
-                    <el-form-item label="活动区域" >
-                        <el-select v-model="form.region" placeholder="请选择活动区域">
-                            <el-option label="区域一" value="shanghai"></el-option>
-                            <el-option label="区域二" value="beijing"></el-option>
-                        </el-select>
+                    <el-form-item label="活动区域">
+                        <el-input ></el-input>
+                    </el-form-item>
+                    <el-form-item label="活动形式">
+                        <el-input ></el-input>
                     </el-form-item>
                 </el-form>
-                <div slot="footer" class="dialog-footer">
-                    <el-button @click="dialogFormVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-                </div>
-            </el-dialog>
-            <form class="bs-example form-horizontal">
-                <div class="form-group">
-                    <label class="col-lg-2 control-label">Email</label>
-                    <div class="col-lg-10">
-                        <input type="email" class="form-control" placeholder="Email">
-                        <span class="help-block m-b-none">Example block-level help text here.</span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-lg-2 control-label">Password</label>
-                    <div class="col-lg-10">
-                        <input type="password" class="form-control" placeholder="Password">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-lg-offset-2 col-lg-10">
-                        <div class="checkbox">
-                            <label class="i-checks">
-                                <input type="checkbox" checked=""><i></i> Remember me
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-lg-offset-2 col-lg-10">
-                        <button type="submit" class="btn btn-sm btn-info">Sign in</button>
-                    </div>
-                </div>
-            </form>
-            <table class="table table-striped table-bordered m-t-md"><thead><tr><th>参数</th> <th>上节点输出</th></tr></thead> <tbody><tr><td paramid="18"><span class="text-danger m-r-xs">*</span>内容路径
-            </td> <td><select isrequire="1" class="form-control"><option value="">无</option> <option value="21">标题
-            </option><option value="22">文章路径
-            </option><option value="23">作者
-            </option><option value="24">摘要
-            </option><option value="25">文章内容
-            </option><option value="26">点赞数
-            </option><option value="27">阅读数
-            </option></select> <span class="error hidden">请选sdf择内容路径</span></td></tr></tbody></table>
+            </div>
+
         </div>
     </div>
 

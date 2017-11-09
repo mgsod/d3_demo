@@ -8,37 +8,41 @@ module.exports = {
      * @param options
      */
     init: function (options) {
-        this.vue_setting = options.vue_setting;
+        this.vue_setting = options.vue_setting; //属性配置
         this.canvas = options.canvas; //画布
         this.nodeSetting = options.nodeSetting; //节点属性
         this.nodeList = options.nodeList; //节点列表 公用属性
         this.nodeWidth = options.nodeWidth || 50; //节点宽 默认50
-        this.nodeHeight = options.nodeHeight || 60; //节点高 默认50
+        this.nodeHeight = options.nodeHeight || 60; //节点高 默认60
+        this.svgWidth = options.svgWidth; //画布宽      自动获取
+        this.svgHeight = options.svgHeight; //画布高
         this.adsorptionIntensity = options.adsorptionIntensity || 20; //边缘吸附强度
 
         this.isSelectStart = false; //是否已经选择起始节点
         this.selectedNode = null;// 已选择的节点
         this.selectedNodeData = null;//连线时 已选择节点的节点数据
 
-        this.nodeOffset = this.nodeWidth / 2; //节点圆心偏移量 [目前是50*50大小节点.圆心为50/2,]
         this.pathColor = options.pathColor || '#565656'; //线条颜色 默认 '#565656'
         this.allowPath = false; //拖拽节点时是否允许线条跟随
 
         this.rectColor = options.rectColor || '#ffad33';
         this.rectWidth = options.rectWidth || 1.1;
-        this.isEdit = false;
-        this.isLine = false;
+        
+        this.isReappear = false; //是否为重现状态
+        this.isLine = false; // 是否为连线状态
 
 
         //event
         this.onNodeClick = options.onNodeClick;
         this.onDrawLine = options.onDrawLine;
         this.onCreateNode = options.onCreateNode;
-        this.svgWidth = options.svgWidth;
-        this.svgHeight = options.svgHeight;
 
         window.onload = setSvgSize(this);
+        window.onbeforeunload = function(){
+         //   return  ""
+        }
 
+        //设置画布大小
         function setSvgSize(_this) {
             return function () {
                 _this.svgWidth = $(window).width() - 75;
@@ -49,10 +53,8 @@ module.exports = {
                         'height': _this.svgHeight
                     })
             }
-
-
         }
-
+        
         alert.options = {
             "closeButton": true,
             "debug": false,
@@ -60,7 +62,7 @@ module.exports = {
             "positionClass": "toast-top-center",
             "onclick": null,
             "showDuration": "300",
-            "hideDuration": "1000",
+            "hideDuration": "500",
             "timeOut": "3000",
             "extendedTimeOut": "1000",
             "showEasing": "swing",
@@ -100,7 +102,7 @@ module.exports = {
             .attr('id', function (d) {
                 //设置节点名称
                 var name = d.nodeInfo.name;
-                this.isEdit || _this.onCreateNode && _this.onCreateNode(d);
+                this.isReappear || _this.onCreateNode && _this.onCreateNode(d);
                 if (!name) {
                     //如果是新建则取时间戳作为唯一名
                     var time = new Date().getTime();
@@ -132,7 +134,8 @@ module.exports = {
                 return _this.nodeSetting[d.nodeInfo.type].img
             });
         g.append('text').text(function(d){
-              return d.data.name.length > 4 ? d.data.name.substring(0,3)+'...' : d.data.name
+             // return d.data.name.length > 4 ? d.data.name.substring(0,3)+'...' : d.data.name
+              return d.data.name
         })
             .attr('y',_this.nodeHeight+15)
             .attr('x',_this.nodeWidth/2)
@@ -144,15 +147,9 @@ module.exports = {
 
         });
 
-
-
-
-
         //绑定拖拽事件
         _this.canvas.selectAll('g')
             .call(_this.drag(_this));
-
-
     },
 
     /**
@@ -237,10 +234,11 @@ module.exports = {
         if(!_this.isLine){
             var type = _nodeData.nodeInfo.type;
             var data = _nodeData.data;
-            var name = _nodeData.nodeInfo.name;
+            _this.clickedNode = _nodeData
             _this.vue_setting.type = type;
             _this.vue_setting.data[type] = data;
-            _this.vue_setting.name = name;
+            _this.vue_setting.name = data.name
+
             _this.canvas.selectAll('g')
                 .filter(function (data) {
                     if (data.nodeInfo.name === _nodeData.nodeInfo.name) {
@@ -263,7 +261,7 @@ module.exports = {
                     }
                 });
 
-            this.onNodeClick && this.onNodeClick();
+            this.onNodeClick && this.onNodeClick(_nodeData);
         }else{
             _this.canvas.selectAll('g')
                 .filter(function (data) {
@@ -306,13 +304,13 @@ module.exports = {
      */
     drawLine: function (_node, _nodeData) {
         var _this = this;
-        if (_this.isEdit) _this.isSelectStart = true;
+        if (_this.isReappear) _this.isSelectStart = true;
         if (!_this.isSelectStart) {
             _this.selectedNodeData = _nodeData;
             _this.selectedNode = _node;
             _this.isSelectStart = true;
         } else {
-            if (!_this.isEdit) {
+            if (!_this.isReappear) {
                 if (_this.selectedNodeData.nodeInfo.name === _nodeData.nodeInfo.name) {
                     alert['warning']("不能选择当前节作为下级节点");
                     _this.restLine();
@@ -354,7 +352,7 @@ module.exports = {
                     d3.select(this).style({stroke: _this.pathColor, 'stroke-width': 1.5})
                 });
 
-            if (!_this.isEdit) {
+            if (!_this.isReappear) {
                 _this.selectedNodeData.nodeInfo.to = _this.selectedNodeData.nodeInfo.to || [];
                 _this.selectedNodeData.nodeInfo.to.push(_nodeData.nodeInfo.name);
 
@@ -365,8 +363,8 @@ module.exports = {
             }
 
 
-            _this.isEdit || _this.onDrawLine && _this.onDrawLine();
-            _this.isEdit = false;
+            _this.isReappear || _this.onDrawLine && _this.onDrawLine();
+            _this.isReappear = false;
             _this.isLine = false;
 
 
@@ -661,7 +659,7 @@ module.exports = {
             for (var j = 0, length = pathTo.length; j < length; j++) {
                 var _node = d3.select('#' + pathTo[j]);
                 var _nodeData = this.nodeList[this.getNodeIndexByName(this.nodeList, pathTo[j])];
-                this.isEdit = true;
+                this.isReappear = true;
                 this.drawLine(_node, _nodeData);
             }
             this.restLine();

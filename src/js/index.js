@@ -2,7 +2,6 @@
  * Created by setting on 2017/10/31 0031.
  */
 var Node = require('./node.js');
-
 var NODE_SETTING = {
     1: {
         img: 'static/svg/1.svg',
@@ -53,7 +52,6 @@ var NODE_SETTING = {
 
     }
 };
-
 var nodeList = [];//节点集合
 var Vue_nodeList = new Vue({
     name: 'nodeList',
@@ -149,13 +147,11 @@ var Vue_nodeList = new Vue({
         }
     }
 });
-
 var Vue_setting = new Vue({
     name: 'nodeSetting',
     el: '#setting',
     data: {
-        type: -1,
-        name: '',
+        type: 0,
         data: {
             1: {
                 name: '',
@@ -164,26 +160,30 @@ var Vue_setting = new Vue({
                 dataSourceType: ''
             }
         },
-        isShow: false,
-        dialogFormVisible: false,
-        form: {
-            name: '',
-            region: '',
-            date1: '',
-            date2: '',
-            delivery: false,
-            type: [],
-            resource: '',
-            desc: ''
-        }
+        isShow: false
     },
     methods: {
         toggle: function () {
             this.isShow = !this.isShow;
-            this.$message({
-                message: '恭喜你，这是一条成功消息',
-                type: 'success'
-            });
+        },
+        setName: function (name) {
+            Node.canvas.select('#' + Node.clickedNode.nodeInfo.name)
+                .select('text')
+                .text(name);
+
+        }
+    },
+    watch: {
+        data: {
+            handler: function (val) {
+                for (var key in val) {
+                    if (val[key].type === this.type) {
+                        var name = val[key].name
+                       this.setName(name)
+                    }
+                }
+            },
+            deep: true
         }
     }
 
@@ -213,8 +213,9 @@ Node.init({
     nodeSetting: NODE_SETTING,
     nodeWidth: 50,
     vue_setting: Vue_setting,
-    onNodeClick: function () {
+    onNodeClick: function (d) {
         Vue_setting.isShow = true;
+
     },
     onDrawLine: function () {
         Node.saveNodeInfo();
@@ -277,8 +278,8 @@ function drop(ev) {
     var index = ev.dataTransfer.getData("index");
     var type = ev.dataTransfer.getData("type");
     if (index) {
-        var x = Node.computedPosition('x', ev.offsetX - Node.nodeOffset);
-        var y = Node.computedPosition('y', ev.offsetY - Node.nodeOffset);
+        var x = Node.computedPosition('x', ev.offsetX - Node.nodeWidth / 2);
+        var y = Node.computedPosition('y', ev.offsetY - Node.nodeHeight / 2);
 
         //记录新增节点
         nodeList.push({
@@ -289,7 +290,6 @@ function drop(ev) {
             },
             data: $.extend(true, {}, Vue_nodeList.content[index])
         });
-
         //在svg上创建对应节点
         Node.createNode();
 
