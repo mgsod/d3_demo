@@ -13,13 +13,13 @@ module.exports = {
         jquery: 'window.$'
     },
     plugins: [
-         new CopyWebpackPlugin([
-             {
-                 from: __dirname + '/src/static',
-                 to: __dirname + '/build/static',
-                 ignore:[]
-             }
-         ]),
+        new CopyWebpackPlugin([
+            {
+                from: __dirname + '/src/static',
+                to: __dirname + '/build/static',
+                ignore:[]
+            }
+        ]),
         new HtmlWebpackPlugin({
                 title: 'd3-app',
                 template: 'src/index.html'
