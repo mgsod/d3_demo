@@ -146,12 +146,7 @@ var Vue_nodeList = new Vue({
         },
         dragstart: function (e) {
             drag(e)
-        },
-        line: function () {
-            Node.isLine = true;
-            Node.restDasharray();
         }
-
     }
 });
 
@@ -202,7 +197,13 @@ $('#canvas').on('drop', function (e) {
 });
 $('#canvas').on('click', function (e) {
     Vue_setting.isShow = false;
+});
 
+$('#line').click(function () {
+    if (Node.isLine) return;
+    $(this).addClass('active');
+    Node.isLine = true;
+    Node.restDasharray();
 });
 
 
@@ -216,12 +217,11 @@ Node.init({
         Vue_setting.isShow = true;
     },
     onDrawLine: function () {
-
         Node.saveNodeInfo();
+        $('#line').removeClass('active')
     },
     onCreateNode: function (d) {
         Vue_setting.isShow = true;
-        console.log(nodeList)
         Node.saveNodeInfo();
     }
 });
@@ -285,7 +285,7 @@ function drop(ev) {
             nodeInfo: {
                 x: x,
                 y: y,
-                type:type
+                type: type
             },
             data: $.extend(true, {}, Vue_nodeList.content[index])
         });

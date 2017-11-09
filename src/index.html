@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>d3-app</title>
     <link rel="stylesheet" href="static/css/context.standalone.css">
-    <link href="https://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+    <link href="static/css/toastr.min.css" rel="stylesheet">
     <link rel="stylesheet" href="static/css/bootstrap.css">
     <link rel="stylesheet" href="static/css/app.min.css">
     <link rel="stylesheet" href="static/css/font-awesome.min.css">
@@ -95,10 +95,6 @@
             <li v-for="item in tabList">
                 <a @click="tabClick(item.type)" :class="{'text-info' : select == item.type}">{{item.name}}</a>
             </li>
-           <!-- <li><a href="#" @click="tabClick(1)"> 数据</a></li>
-            <li> <a href="#" @click="tabClick(2)">输出</a></li>
-            <li> <a href="#" @click="tabClick(3)">评估</a></li>
-            <li> <a href="#" @click="tabClick(4)">算法</a></li>-->
         </ul>
         <div class="node-panel panel" :class="{'_show':isShow,'_hide':!isShow}">
             <div class="switch left " @click="toggle">
@@ -113,25 +109,26 @@
                         <div>{{item.name}}</div>
                     </a>
                 </div>
-                <div class="line line-dashed b-b line-lg"></div>
-                <p class="text-center">工具</p>
-                <a  class="node-item" @click="line">
-                    <img  width="80"   src="static/img/line.png"/>
-                    <div>直线sdf</div>
-                </a>
             </div>
 
         </div>
     </div>
     <div class="canvas pull-left">
         <div class="panel-heading bg-white b-b text-center">
-            <button class="btn btn-default btn-rounded">保存</button>
-            <button class="btn btn-default btn-rounded">保存</button>
-            <button class="btn btn-default btn-rounded">保存</button>
-            <button class="btn btn-default btn-rounded">保存</button>
+            <div class="row">
+                <div class="col-sm-3">
+                    <button class="btn btn-default padder-md pull-right" id="line">
+                        <img src="static/img/_line.png" alt="">
+                    </button>
+                </div>
+                <div class="col-sm-6 text-center">
+                    <button class="btn btn-default">保存</button>
+                </div>
+            </div>
+
         </div>
-        <div class="bgContainer b-b  b-r">
-            <svg id="canvas">
+        <div class="bgContainer b-b  b-r" style="height: 100%;width: 100%">
+            <svg id="canvas" style="height: 100%;width: 100%">
 
             </svg>
         </div>

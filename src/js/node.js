@@ -13,7 +13,7 @@ module.exports = {
         this.nodeSetting = options.nodeSetting; //节点属性
         this.nodeList = options.nodeList; //节点列表 公用属性
         this.nodeWidth = options.nodeWidth || 50; //节点宽 默认50
-        this.nodeHeight = options.nodeHeight || 50; //节点高 默认50
+        this.nodeHeight = options.nodeHeight || 60; //节点高 默认50
         this.adsorptionIntensity = options.adsorptionIntensity || 20; //边缘吸附强度
 
         this.isSelectStart = false; //是否已经选择起始节点
@@ -24,6 +24,8 @@ module.exports = {
         this.pathColor = options.pathColor || '#565656'; //线条颜色 默认 '#565656'
         this.allowPath = false; //拖拽节点时是否允许线条跟随
 
+        this.rectColor = options.rectColor || '#ffad33';
+        this.rectWidth = options.rectWidth || 1.1;
         this.isEdit = false;
         this.isLine = false;
 
@@ -116,10 +118,11 @@ module.exports = {
         g.append('rect')
             .attr('width', _this.nodeWidth)
             .attr('height', _this.nodeHeight)
+            .attr('rx',2)
             .style({
                 fill: 'none',
-                stroke:'black',
-                'stroke-width':1
+                stroke:_this.isLine ? _this.rectColor :'black',
+                'stroke-width':_this.rectWidth
             });
         //图片
         g.append('image')
@@ -246,7 +249,7 @@ module.exports = {
                             .style({
                                 fill: 'none',
                                 stroke: 'black',
-                                'stroke-width': 1
+                                'stroke-width': _this.rectWidth
                             })
                             .attr('stroke-dasharray', 8)
                             .attr('class', 'strokedrect');
@@ -269,8 +272,7 @@ module.exports = {
                         _this.select('rect')
                             .style({
                             fill: 'none',
-                            stroke: '#ffad33',
-                            'stroke-width': 2
+                            'stroke-width': _this.rectWidth
                         })
                             .attr('stroke-dasharray', 8)
                             .attr('class', 'strokedrect');
@@ -284,11 +286,16 @@ module.exports = {
     },
 
     restDasharray:function(){
+        var _this = this;
         alert['success']('进入连线模式,单击节点可进行连线')
         d3.selectAll('g')
             .select('rect')
             .attr('class','')
             .attr('stroke-dasharray', '')
+            .style({
+                stroke:_this.rectColor
+            })
+
     },
 
     /**
@@ -309,16 +316,19 @@ module.exports = {
                 if (_this.selectedNodeData.nodeInfo.name === _nodeData.nodeInfo.name) {
                     alert['warning']("不能选择当前节作为下级节点");
                     _this.restLine();
+                    _this.onDrawLine()
                     return false
                 }
                 if (_nodeData.nodeInfo.from && _nodeData.nodeInfo.from.indexOf(_this.selectedNodeData.nodeInfo.name) > -1) {
                     alert['warning']("此节点已经是当前节点的下级");
                     _this.restLine();
+                    _this.onDrawLine()
                     return false;
                 }
                 if (_nodeData.nodeInfo.to && _nodeData.nodeInfo.to.indexOf(_this.selectedNodeData.nodeInfo.name) > -1) {
                     alert['warning']("此节点是当前节点的上级,不可作为下级节点");
                     _this.restLine();
+                    _this.onDrawLine()
                     return false;
                 }
             }
@@ -338,7 +348,7 @@ module.exports = {
                     'stroke-width': 1.5
                 })
                 .on('mouseover', function () {
-                    d3.select(this).style({stroke: '#ffad33', 'stroke-width': 2.8})
+                    d3.select(this).style({stroke: _this.rectColor, 'stroke-width': 2.8})
                 })
                 .on('mouseout', function () {
                     d3.select(this).style({stroke: _this.pathColor, 'stroke-width': 1.5})
@@ -355,7 +365,7 @@ module.exports = {
             }
 
 
-            this.isEdit || this.onDrawLine && this.onDrawLine();
+            _this.isEdit || _this.onDrawLine && _this.onDrawLine();
             _this.isEdit = false;
             _this.isLine = false;
 
@@ -433,7 +443,7 @@ module.exports = {
             .style({
                 fill: 'none',
                 stroke: 'black',
-                'stroke-width': 1
+                'stroke-width': _this.rectWidth
             })
             .attr('class','')
             .attr('stroke-dasharray', '')
@@ -588,33 +598,34 @@ module.exports = {
         y1 = parseInt(y1);
         y2 = parseInt(y2);
         var position = this.getPosition(x1, y1, x2, y2);
+        var _x1,_y1,_x2,_y2;
         switch (position) {
             case 'left':
-                var _x1 = x1;
-                var _y1 = y1 + this.nodeOffset;
-                var _x2 = x2 + this.nodeWidth;
-                var _y2 = y2 + this.nodeOffset;
+                 _x1 = x1;
+                 _y1 = y1 + this.nodeHeight/2;
+                 _x2 = x2 + this.nodeWidth;
+                 _y2 = y2 + this.nodeHeight/2;
                 return [[_x1, _y1], [_x2, _y2]];
                 break;
             case 'right':
-                var _x1 = x1 + this.nodeWidth;
-                var _y1 = y1 + this.nodeOffset;
-                var _x2 = x2;
-                var _y2 = y2 + this.nodeOffset;
+                 _x1 = x1 + this.nodeWidth;
+                 _y1 = y1 + this.nodeHeight/2;
+                 _x2 = x2;
+                 _y2 = y2 + this.nodeHeight/2;
                 return [[_x1, _y1], [_x2, _y2]];
                 break;
             case 'top':
-                var _x1 = x1 + this.nodeOffset;
-                var _y1 = y1;
-                var _x2 = x2 + this.nodeOffset;
-                var _y2 = y2 + this.nodeWidth;
+                 _x1 = x1 + this.nodeWidth/2;
+                 _y1 = y1;
+                 _x2 = x2 + this.nodeWidth/2;
+                 _y2 = y2 + this.nodeHeight+15;
                 return [[_x1, _y1], [_x2, _y2]];
                 break;
             case 'bottom':
-                var _x1 = x1 + this.nodeOffset;
-                var _y1 = y1 + this.nodeWidth;
-                var _x2 = x2 + this.nodeOffset;
-                var _y2 = y2;
+                 _x1 = x1 + this.nodeWidth/2;
+                 _y1 = y1 + this.nodeHeight+15;
+                 _x2 = x2 + this.nodeWidth/2;
+                 _y2 = y2;
                 return [[_x1, _y1], [_x2, _y2]];
                 break;
         }
