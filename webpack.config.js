@@ -6,7 +6,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
     entry: __dirname + "/src/js/index.js",
     output: {
-        path: __dirname + "/build",
+        path: __dirname + "/dist",
         filename: "static/js/index.min.js?t=[hash]"
     },
     externals: {
@@ -16,7 +16,7 @@ module.exports = {
         new CopyWebpackPlugin([
             {
                 from: __dirname + '/src/static',
-                to: __dirname + '/build/static',
+                to: __dirname + '/dist/static',
                 ignore:[]
             }
         ]),

@@ -490,7 +490,7 @@ module.exports = {
      *  获取当前节点和其距离最短的节点在节点集合中的索引
      * @param x 当前节点x坐标
      * @param y 当前节点y坐标
-     * @param arr 节点集合
+     * @param arr 节点集合dsd
      * @returns {number}
      */
     getMinDistanceIndex: function (x, y, arr) {
