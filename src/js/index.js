@@ -200,10 +200,16 @@ $('#canvas').on('click', function (e) {
 });
 
 $('#line').click(function () {
-    if (Node.isLine) return;
-    $(this).addClass('active');
-    Node.isLine = true;
-    Node.restDasharray();
+    if (Node.isLine){
+        Node.restLine();
+        $(this).removeClass('active');
+        Node.isLine = false
+    }else{
+        $(this).addClass('active');
+        Node.isLine = true;
+        Node.restDasharray();
+    }
+
 });
 
 
@@ -226,7 +232,7 @@ Node.init({
         Node.saveNodeInfo();
     }
 });
-nodeList = Node.nodeList
+nodeList = Node.nodeList;
 
 
 //初始化右键菜单插件
