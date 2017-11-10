@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="static/css/app.min.css">
     <link rel="stylesheet" href="static/css/font-awesome.min.css">
     <link rel="stylesheet" href="static/css/index.css">
-    <link rel="stylesheet" href="static/css/element.css">
 </head>
 <body>
 
@@ -144,7 +143,7 @@
                 </div>
             </div>
         </div>
-        <div class="bgContainer b-b  b-r" style="height: 100%;width: 100%">
+        <div class="bgContainer b-b  b-r" style="height: 500px;width: 1800px">
             <svg id="canvas" style="height: 100%;width: 100%">
 
             </svg>
@@ -158,19 +157,32 @@
         <div class="panel-heading text-center padder-v-sm b-b">属性</div>
         <div class="panel-body ">
             <div v-show="type == 1">
-                <el-form label-position="right" label-width="80px" size="small" class="text-center">
-                    <el-form-item label="名称">
-                        <el-input v-model="data[1].name"></el-input>
-                    </el-form-item>
-                    <el-form-item label="活动区域">
-                        <el-input ></el-input>
-                    </el-form-item>
-                    <el-form-item label="活动形式">
-                        <el-input ></el-input>
-                    </el-form-item>
-                </el-form>
-            </div>
+                <form class="form-horizontal">
+                    <template v-for="item in data[1].settings">
+                        <template v-if="item.type == 'input'">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">{{item.name}}</label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" :placeholder="item.name" v-model="item.value">
+                                </div>
+                            </div>
+                        </template>
+                        <template v-if="item.type == 'select'">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">{{item.name}}</label>
+                                <div class="col-sm-7">
+                                    <select v-model="item.value" class="form-control">
+                                        <option v-for="k in item.options" :value="k.key">{{k.value}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </template>
+                    </template>
+                    <!--<div class="form-group" >0
 
+                    </div>-->
+                </form>
+            </div>
         </div>
     </div>
 
@@ -179,7 +191,6 @@
 <script src="static/js/d3.js" charset="utf-8"></script>
 <script src="static/js/context.js"></script>
 <script src="static/js/vue.js"></script>
-<script src="static/js/element.js"></script>
 </body>
 
 

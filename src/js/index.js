@@ -59,12 +59,34 @@ var Vue_nodeList = new Vue({
     data: {
         nodeList: [
             {
-                name: '数据抓取',
-                type: '1'
+                settings: [
+                    {
+                        name:'节点名称',
+                        type:'input',
+                        value:''
+                    },
+                    {
+                        name:'节点长度',
+                        type:'input',
+                        value:'111'
+                    },
+                    {
+                        name:'数据源',
+                        type:'select',
+                        value:'',
+                        options:[{
+                            key:1,
+                            value:2
+                        }]
+                    }
+                ],
+                type: '1',
+                id:''
             },
             {
                 name: '数据抓取111',
-                type: '1'
+                type: '1',
+                inputType:'select'
             },
             {
                 name: '读取',
@@ -153,12 +175,9 @@ var Vue_setting = new Vue({
     data: {
         type: 0,
         data: {
-            1: {
-                name: '',
-                process: "",
-                dataSource: '',
-                dataSourceType: ''
-            }
+            1: [
+                {name:"test",}
+            ]
         },
         isShow: false
     },
@@ -179,7 +198,8 @@ var Vue_setting = new Vue({
                 for (var key in val) {
                     if (val[key].type === this.type) {
                         var name = val[key].name
-                       this.setName(name)
+                        this.setName(name)
+                        console.log(nodeList)
                     }
                 }
             },
@@ -200,11 +220,11 @@ $('#canvas').on('click', function (e) {
 });
 
 $('#line').click(function () {
-    if (Node.isLine){
+    if (Node.isLine) {
         Node.restLine();
         $(this).removeClass('active');
         Node.isLine = false
-    }else{
+    } else {
         $(this).addClass('active');
         Node.isLine = true;
         Node.restDasharray();

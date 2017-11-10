@@ -71,7 +71,7 @@ module.exports = {
             "hideMethod": "slideUp"
         };
         //缓存
-        this.reappear();
+        //this.reappear();
         this.canvas.append('svg:defs').append('svg:marker')
             .attr('id', 'end-arrow')
             .attr('viewBox', '0 -5 10 10')
@@ -350,7 +350,7 @@ module.exports = {
                     if(_nodeData.data.type == 1){
                         return 'strokedrect'
                     }*/
-                    return 'strokedrect'
+                   // return 'strokedrect'
                 })
                 .style({
                     fill: 'none',
@@ -563,16 +563,21 @@ module.exports = {
      * @returns {boolean}
      */
     isCollisionWithRect: function (x1, y1, w, h, x2, y2) {
-        if (x1 >= x2 && x1 >= x2 + w) {
+        if (x1 >= x2 && x1 >= x2 + w) {        
             return false;
+
+
         } else if (x1 <= x2 && x1 + w <= x2) {
             return false;
+
         } else if (y1 >= y2 && y1 >= y2 + h) {
+
             return false;
         } else if (y1 <= y2 && y1 + h <= y2) {
             return false;
+
         }
-        return true;
+       return true;
     },
 
     /**
