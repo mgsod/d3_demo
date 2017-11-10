@@ -189,8 +189,8 @@ var Vue_setting = new Vue({
 
 });
 
-$('#canvas').on('dragover', function (e) {
-    allowDrop(e.originalEvent)
+$('#canvas').on('dragover', e => {
+    allowDrop(e.originalEvent);
 });
 $('#canvas').on('drop', function (e) {
     drop(e.originalEvent)

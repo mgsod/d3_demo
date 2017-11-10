@@ -12,6 +12,19 @@ module.exports = {
     externals: {
         jquery: 'window.$'
     },
+    module:{
+        loaders: [
+            {
+                test: /\.vue$/,
+                exclude: /node_modules/,
+                loader: 'vue-loader'
+            },
+            {
+                test:/\.js$/,
+                loader:"babel-loader"
+            }
+        ]
+    },
     plugins: [
         new CopyWebpackPlugin([
             {

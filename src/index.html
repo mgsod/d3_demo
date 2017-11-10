@@ -115,16 +115,34 @@
     <div class="canvas pull-left">
         <div class="panel-heading bg-white b-b text-center">
             <div class="row">
-                <div class="col-sm-3">
-                    <button class="btn btn-default padder-md pull-right" id="line">
-                        <img src="static/img/_line.png" alt="">
+                <div class="col-sm-2">
+                    &nbsp;
+                </div>
+                <div class="col-sm-3 text-left text-warning-dker">
+                    VGC兔兔分析项目
+                    <a>
+                        <i class="fa fa-edit text-dark m-l"></i>
+                    </a>
+                </div>
+                <div class="col-sm-4 text-right">
+                    <button id="line" class="btn btn-default">
+                        <i class="fa fa-arrows-v"></i>
+                        连线
+                    </button>
+                    <button class="btn btn-default">
+                        <i class="fa fa-save"></i>
+                        保存
+                    </button>
+                    <button class="btn btn-default">
+                        <i class="fa fa-mail-reply"></i>
+                        返回
+                    </button>
+                    <button class="btn btn-default">
+                        <i class="fa fa-share-square-o"></i>
+                        另存
                     </button>
                 </div>
-                <div class="col-sm-6 text-center">
-                    <button class="btn btn-default">保存</button>
-                </div>
             </div>
-
         </div>
         <div class="bgContainer b-b  b-r" style="height: 100%;width: 100%">
             <svg id="canvas" style="height: 100%;width: 100%">
@@ -137,7 +155,7 @@
             <i class="fa fa-angle-right" v-show="isShow"></i>
             <i class="fa fa-angle-left" v-show="!isShow"></i>
         </div>
-        <div class="panel-heading text-center padder-v-sm b-b">属sdsf性</div>
+        <div class="panel-heading text-center padder-v-sm b-b">属性</div>
         <div class="panel-body ">
             <div v-show="type == 1">
                 <el-form label-position="right" label-width="80px" size="small" class="text-center">
