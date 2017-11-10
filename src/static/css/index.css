@@ -80,11 +80,23 @@ text{
     font-size: 24px;
 }
 
-#line i{
+#line i,.fullScreen-i{
     transform: rotate(-45deg);
 }
-
-
+#table{
+    transition: all .5s;
+}
+.fullScreen{
+    position: fixed;
+    top: 5%;
+    left: 5%;
+    right: 5%;
+    bottom: 5%;
+    z-index: 100;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+}
 .content{
     height: 100%;
     overflow: hidden;
@@ -142,7 +154,6 @@ ul>li{
     animation: switch_hide .7s ;
     animation-fill-mode:forwards;
 }
-
 @keyframes panel_show {
     from {
         left:-250px;
@@ -161,7 +172,6 @@ ul>li{
         background-color: transparent;
     }
 }
-
 .switch.right{
     width: 10px;
     left: -10px;
@@ -189,15 +199,12 @@ ul>li{
     animation: panel_hide .8s ;
     animation-fill-mode:forwards;
 }
-
-
 .padder-v-sm{
     padding:16px 0;
 }
 .panel-body{
     padding: 5px;
 }
-
 .setting{
     float: left;
     position: absolute;
@@ -231,6 +238,16 @@ ul>li{
         right:-400px;
         background-color: transparent;
     }
+}
+.shade{
+    background-color: #000;
+    opacity: .5;
+    position: fixed;
+    top:0;
+    left:0;
+    bottom: 0;
+    right: 0;
+    z-index:99
 }
 
 

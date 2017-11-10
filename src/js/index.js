@@ -179,7 +179,8 @@ var Vue_setting = new Vue({
                 {name:"test",}
             ]
         },
-        isShow: false
+        isShow: false,
+        isFullScreen:false
     },
     methods: {
         toggle: function () {
@@ -189,6 +190,18 @@ var Vue_setting = new Vue({
             Node.canvas.select('#' + Node.clickedNode.nodeInfo.name)
                 .select('text')
                 .text(name);
+
+        },
+        fullScreen:function(id){
+            if(!this.isFullScreen){
+                $('#'+id).addClass('fullScreen')
+                $('.shade').removeClass('hidden');
+                this.isFullScreen = true;
+            }else{
+                $('#'+id).removeClass('fullScreen')
+                $('.shade').addClass('hidden');
+                this.isFullScreen = false;
+            }
 
         }
     },

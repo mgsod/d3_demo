@@ -103,7 +103,8 @@
                 <div class="panel-header text-center padder-v-sm b-b">{{name}}</div>
                 <div class="panel-body">
                     <a v-for="(item,index) in content" class="node-item">
-                        <img  :data-index='index'  :data-type="item.type" width="50"  :src="item | getImg" draggable="true" @dragstart="dragstart"/>
+                        <img :data-index='index' :data-type="item.type" width="50" :src="item | getImg" draggable="true"
+                             @dragstart="dragstart"/>
                         <div>{{item.name}}</div>
                     </a>
                 </div>
@@ -163,7 +164,8 @@
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">{{item.name}}</label>
                                 <div class="col-sm-7">
-                                    <input type="text" class="form-control" :placeholder="item.name" v-model="item.value">
+                                    <input type="text" class="form-control" :placeholder="item.name"
+                                           v-model="item.value">
                                 </div>
                             </div>
                         </template>
@@ -178,15 +180,29 @@
                             </div>
                         </template>
                     </template>
-                    <!--<div class="form-group" >0
+                    <div id="table">
+                        <a @click="fullScreen('table')" class="fullScreen-i">
+                            <i class="fa fa-arrows"></i>
+                        </a>
 
-                    </div>-->
+                        <table class="table table-bordered">
+                            <tr>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>1</td>
+                            </tr>
+                        </table>
+                    </div>
+
                 </form>
             </div>
         </div>
     </div>
 
 </div>
+<div class="shade hidden"></div>
 <script src="static/js/jq.js"></script>
 <script src="static/js/d3.js" charset="utf-8"></script>
 <script src="static/js/context.js"></script>

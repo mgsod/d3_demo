@@ -177,7 +177,7 @@ module.exports = {
     /**
      * 拖拽函数 [d3]
      * @param _this
-     * @returns {boolean}
+     * @returns function
      */
     dragMove: function (_this) {
         return function (_nodeData, _nodeIndex) {
