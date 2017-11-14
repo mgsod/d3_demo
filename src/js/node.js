@@ -25,9 +25,9 @@ module.exports = {
         this.pathColor = options.pathColor || '#565656'; //线条颜色 默认 '#565656'
         this.allowPath = false; //拖拽节点时是否允许线条跟随
 
-        this.rectColor = options.rectColor || '#ffad33';
-        this.rectWidth = options.rectWidth || 1.1;
-        this.textHeight = options.textHeight || 15;
+        this.rectColor = options.rectColor || '#ffad33'; //rect边框颜色
+        this.rectWidth = options.rectWidth || 1.1;      //rect线条宽度
+        this.textHeight = options.textHeight || 15;     //节点文字高度
 
         this.isReappear = false; //是否为重现状态
         this.isLine = false; // 是否为连线状态
@@ -216,7 +216,7 @@ module.exports = {
                 }
             }
             //判断是否有节点可以碰撞. 如果有则拖动结束
-            if (minDistances > -1 && _this.isCollisionWithRect(_nodeData.nodeInfo.x, _nodeData.nodeInfo.y, _this.nodeWidth, _this.nodeHeight+18, collisionArr[minDistances].nodeInfo.x, collisionArr[minDistances].nodeInfo.y)) {
+            if (minDistances > -1 && _this.isCollisionWithRect(_nodeData.nodeInfo.x, _nodeData.nodeInfo.y, _this.nodeWidth, _this.nodeHeight + 18, collisionArr[minDistances].nodeInfo.x, collisionArr[minDistances].nodeInfo.y)) {
                 _this.allowPath = false;
                 return false;
             } else {
@@ -346,12 +346,12 @@ module.exports = {
                 .attr("marker-end", "url(#end-arrow)")
                 .attr('from', _this.selectedNodeData.nodeInfo.name)
                 .attr('to', _nodeData.nodeInfo.name)
-                .attr('class',function(){
-                  /*  console.log(_nodeData)
-                    if(_nodeData.data.type == 1){
-                        return 'strokedrect'
-                    }*/
-                   // return 'strokedrect'
+                .attr('class', function () {
+                    /*  console.log(_nodeData)
+                      if(_nodeData.data.type == 1){
+                          return 'strokedrect'
+                      }*/
+                    // return 'strokedrect'
                 })
                 .style({
                     fill: 'none',
@@ -460,6 +460,7 @@ module.exports = {
             .attr('stroke-dasharray', '')
         _this.selectedNodeData = null;
         _this.isSelectStart = false;
+        _this.isLine = false;
     },
 
     /**
@@ -564,7 +565,7 @@ module.exports = {
      * @returns {boolean}
      */
     isCollisionWithRect: function (x1, y1, w, h, x2, y2) {
-        if (x1 >= x2 && x1 >= x2 + w) {        
+        if (x1 >= x2 && x1 >= x2 + w) {
             return false;
 
 
@@ -578,7 +579,7 @@ module.exports = {
             return false;
 
         }
-       return true;
+        return true;
     },
 
     /**
