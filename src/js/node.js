@@ -27,6 +27,7 @@ module.exports = {
 
         this.rectColor = options.rectColor || '#ffad33';
         this.rectWidth = options.rectWidth || 1.1;
+        this.textHeight = options.textHeight || 15;
 
         this.isReappear = false; //是否为重现状态
         this.isLine = false; // 是否为连线状态
@@ -138,8 +139,8 @@ module.exports = {
             if (!_this.isLine) _this.clickNode(g, d)
             return d.data.name;
         })
-            .attr('y', _this.nodeHeight + 15)
-            .attr('x', _this.nodeWidth / 2)
+            .attr('y', _this.nodeHeight + _this.textHeight)
+            .attr('x', _this.nodeWidth / 2);
         //绑定单击事件
         g.on('click', function (d) {
             d3.event.stopPropagation()
@@ -485,7 +486,7 @@ module.exports = {
                     temp = 0;
                 }
                 if (value >= _this.svgHeight - _this.nodeHeight || value >= _this.svgHeight - _this.nodeHeight - _this.adsorptionIntensity) {
-                    temp = _this.svgHeight - _this.nodeHeight;
+                    temp = _this.svgHeight - _this.nodeHeight - _this.textHeight;
                 }
                 return parseInt(temp);
                 break;

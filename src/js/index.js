@@ -148,7 +148,7 @@ var Vue_nodeList = new Vue({
         tabClick: function (type) {
             this.select = type;
             this.isShow = true;
-            this.changeTab()
+            this.changeTab();
         },
         changeTab: function () {
             var _this = this;
