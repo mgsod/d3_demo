@@ -141,6 +141,19 @@ module.exports = {
         })
             .attr('y', _this.nodeHeight + _this.textHeight)
             .attr('x', _this.nodeWidth / 2);
+
+    /*    g.append('path')
+            .attr('d',"M10 0 L25 0 L0 25 L0 10 ")
+            .style({
+                fill:'#23b7e5'
+            });*/
+        g.append('path')
+            .attr('d',"M25 0 L40 0 L50 10 L50 25")
+            .style({
+                fill:'#ffc107'
+            });
+
+
         //绑定单击事件
         g.on('click', function (d) {
             d3.event.stopPropagation()
