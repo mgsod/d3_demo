@@ -4,39 +4,38 @@
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
-    entry: __dirname + "/src/js/index.js",
+    entry: {
+        index: __dirname + "/src/js/index.js",
+        list: __dirname + "/src/js/list.js"
+    },
     output: {
         path: __dirname + "/dist",
-        filename: "static/js/index.min.js?t=[hash]"
+        filename: "static/js/[name].min.js?t=[hash]"
     },
     externals: {
         jquery: 'window.$'
-    },
-    module:{
-        loaders: [
-            {
-                test: /\.vue$/,
-                exclude: /node_modules/,
-                loader: 'vue-loader'
-            },
-            {
-               /* test:/\.js$/,
-                loader:"babel-loader"*/
-            }
-        ]
     },
     plugins: [
         new CopyWebpackPlugin([
             {
                 from: __dirname + '/src/static',
                 to: __dirname + '/dist/static',
-                ignore:[]
+                ignore: []
             }
         ]),
         new HtmlWebpackPlugin({
+                filename: 'index.html',
                 title: 'd3-app',
-                template: 'src/index.html'
+                template: 'src/index.html',
+                chunks: ['index']
             }
-        )
+        ),
+        new HtmlWebpackPlugin({
+                filename: 'list.html',
+                title: 'd3-app',
+                template: 'src/list.html',
+                chunks: ['list']
+            }
+        ),
     ]
 };
