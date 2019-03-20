@@ -1,0 +1,77 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>饼状图</title>
+</head>
+
+<style>
+
+
+</style>
+<body>
+<svg width="500" height="500"></svg>
+
+<input type="range" min="0" max="100" oninput="update(this)">
+<input type="number" onchange="update(this)">
+<script src="http://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+<script>
+
+    var arcGenerator = d3.arc().innerRadius(80).outerRadius(100).startAngle(0).endAngle(Math.PI * 2);
+    var farc = d3.arc().innerRadius(80).outerRadius(100).startAngle(0);
+    var colorLinear = d3.scaleLinear().domain([0, 100]).range(["#EEE685", "#EE3B3B"]);
+
+
+    var p = 20;
+
+
+    var svg = d3.select('svg');
+    svg.append('path')
+        .attr('d', arcGenerator())
+        .attr('transform', 'translate(250,250)')
+        .attr('fill', '#f6f8fa');
+
+    svg.append('path')
+        .attr('id', 'farc')
+        .datum({endAngle: (Math.PI * 2) * p / 100})
+        .attr('d', farc)
+        .attr('transform', 'translate(250,250)')
+        .attr('fill', colorLinear(p));
+
+    var dataText = svg.append('text')
+        .attr('id', 'text')
+        .attr('text-anchor', 'middle')
+        .attr('dominant-baseline', 'middle')
+        .attr('transform', 'translate(250,250)')
+        .attr('font-size', '38px')
+        .text(p.toFixed(2))
+        .datum(p)
+
+
+    function update(e) {
+        p = e.value;
+        d3.select('#farc')
+            .transition()
+            .duration(750)
+            .attrTween('d', function (d) {
+                var compute = d3.interpolate(d.endAngle, (Math.PI * 2) * p / 100);
+                return function(t){
+                    var data = d.endAngle / Math.PI / 2 * 100;
+                    d3.select('text').text(data.toFixed(2));
+                    d.endAngle = compute(t);
+                    return farc(d)
+                }
+
+            })
+            .attr('fill', colorLinear(p))
+        d3.select('text')
+            .transition()
+            .duration(750)
+            .text(p)
+        //  console.log((Math.PI * 2) / 100 * p)
+        // console.log(e.value)
+    }
+
+</script>
+
+</body>
+</html>  

@@ -3,34 +3,25 @@
     <meta charset="utf-8">
     <title>捆图</title>
     <style>
-
         .node circle {
             stroke: black;
             stroke-width: 1px;
         }
-
         .node text {
             font-size: 12px;
             font-family: simsun;
         }
-
         .link {
             fill: none;
             stroke: black;
             stroke-opacity: .5;
             stroke-width: 2px;
         }
-
     </style>
-
-
 </head>
-
 <body>
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script>
-
-
     var width = 500;	//SVG绘制区域的宽度
     var height = 500;	//SVG绘制区域的高度
 
@@ -38,7 +29,6 @@
         .append("svg")			//在<body>中添加<svg>
         .attr("width", width)	//设定<svg>的宽度属性
         .attr("height", height);//设定<svg>的高度属性
-
 
     // 城市列表
     var cities = {
@@ -63,43 +53,38 @@
         {source: "上海", target: "杭州"},
         {source: "昆明", target: "成都"},
         {source: "西安", target: "太原"}
-    ];  //（该数据为假设，并没有经过调查）
+    ];
 
 
-    //2. 转换数据
+
     var cluster = d3.cluster()
-        .size([360, width / 2 - 100])
-     /*   .separation(function (a, b) {
-            return (a.parent === b.parent ? 1 : 2) / a.depth;
-        });*/
-
+        .size([360, width / 2 - 100]);
 
     var nodes = cluster(d3.hierarchy(cities)).leaves();
 
 
-    console.log(2222,nodes)
-    var map = function (nodes, links) {
+    function map (nodes, links) {
         var hash = [];
         for (var i = 0; i < nodes.length; i++) {
             hash[nodes[i].data.name] = nodes[i];
         }
         var resultLinks = [];
         for (var i = 0; i < links.length; i++) {
+            //d3 v4后用node.path(target)来计算两个点的距离
+            //返回一个从node->parent->target的数组路径
             resultLinks.push(hash[links[i].source].path(hash[links[i].target]))
         }
         return resultLinks;
-    };
+    }
 
 
-    var ol = map(nodes, railway)
-   
+    var links = map(nodes, railway);
 
 
     var gBundle = svg.append("g")
         .attr("transform", "translate(" + (width / 2) + "," + (height / 2) + ")");
 
-
-    //3. 绘图
+    //线段生成器
     var line = d3.radialLine()
         .curve(d3.curveBundle.beta(0.85))
         .radius(function (d) {
@@ -110,19 +95,20 @@
         });
 
 
-    var link = gBundle.selectAll(".link")
-        .data(ol)
+    //添加线条
+    gBundle.selectAll(".link")
+        .data(links)
         .enter()
         .append("path")
         .attr("class", "link")
-        .attr("d", (d, i) => {
-            return line(d)
-        }); //使用线段生成器
+        .attr("d", line);
 
 
+    //颜色生成器
     var color = d3.scaleOrdinal(d3.schemeCategory10);
 
 
+    //添加节点
     var node = gBundle.selectAll(".node")
         .data(nodes.filter(function (d) {
             return !d.children;
@@ -131,15 +117,18 @@
         .append("g")
         .attr("class", "node")
         .attr("transform", function (d) {
-            return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")" + "rotate(" + (90 - d.x) + ")";
+            return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"
+                + "rotate(" + (90 - d.x) + ")";
         });
 
+    //圆
     node.append("circle")
         .attr("r", 20)
         .style("fill", function (d, i) {
             return color(i);
         });
 
+    //文本信息
     node.append("text")
         .attr("dy", ".2em")
         .style("text-anchor", "middle")
